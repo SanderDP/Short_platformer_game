@@ -1,0 +1,5 @@
+- Om een levelmap te maken maak ik gebruik van Tiled; een programma om tilesets te gebruiken om maps te maken en nog meer opties...
+	Tiled 1.9 heeft "classes" ipv "types" en fxgl is gemaakt met "types" te zoeken in de files. 1.0.1 geinstalleerd en map hierop gemaakt
+	1.0.1 was niet meer gesupport => 1.4.2 geinstalleerd
+
+- FXGL.getGameWorld().setLevel(FXGL.setLevelFromMap("tmx/platformer.tmx")); moest gewoon FXGL.setLevelFromMap("tmx/platformer.tmx") zijn
