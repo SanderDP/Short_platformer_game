@@ -5,7 +5,6 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.image;
@@ -70,8 +69,12 @@ public class PlayerComponent extends Component {
         if (jumps == 0)
             return;
 
-        physics.setVelocityY(-300);
+        physics.setVelocityY(-250);
 
         jumps--;
+    }
+
+    public void stomp() {
+        physics.setVelocityY(1000);
     }
 }

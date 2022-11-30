@@ -56,6 +56,13 @@ public class PlatformerApp extends GameApplication {
                 player.getComponent(PlayerComponent.class).jump();
             }
         }, KeyCode.UP);
+
+        getInput().addAction(new UserAction("Stomp") {
+            @Override
+            protected void onAction() {
+                player.getComponent(PlayerComponent.class).stomp();
+            }
+        }, KeyCode.DOWN);
     }
 
     @Override
