@@ -3,6 +3,7 @@ package org.platformer;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
 import javafx.scene.input.KeyCode;
@@ -16,7 +17,9 @@ public class PlatformerApp extends GameApplication {
         settings.setWidth(50 * 16);
         settings.setHeight(38 * 16);
 
+        //set mode to developer and make developer tools accessible when playing by pressing "1"
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
+        settings.setDeveloperMenuEnabled(true);
     }
 
     private Entity player;
@@ -60,6 +63,11 @@ public class PlatformerApp extends GameApplication {
         getGameWorld().addEntityFactory(new PlatformerFactory());
         setLevelFromMap("tmx/platformer.tmx");
 
+        player = spawn("player", 50, 50);
+
+        Viewport viewport = getGameScene().getViewport();
+        viewport.setBounds(-100, 0, 250 * 16, getAppHeight() );
+        viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
     }
 
     public static void main(String[] args) {
