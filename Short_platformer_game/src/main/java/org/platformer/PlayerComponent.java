@@ -8,6 +8,7 @@ import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.image;
+import static com.almasb.fxgl.dsl.FXGL.text;
 
 public class PlayerComponent extends Component {
 
@@ -15,12 +16,15 @@ public class PlayerComponent extends Component {
 
     private AnimatedTexture texture;
 
-    private AnimationChannel animIdle, animWalk;
+    private AnimationChannel animIdle, animWalk, animJump, animDoubleJump, animFall;
     private int jumps = 2;
 
     public PlayerComponent() {
         animIdle = new AnimationChannel(image("Virtual Guy/Idle (32x32).png"), 11, 32, 32, Duration.seconds(1), 0, 10);
         animWalk = new AnimationChannel(image("Virtual Guy/Run (32x32).png"), 12, 32, 32, Duration.seconds(1), 0, 11);
+        animJump = new AnimationChannel(image("Virtual Guy/Jump (32x32).png"), 1, 32, 32, Duration.seconds(1), 0, 0);
+        animDoubleJump = new AnimationChannel(image("Virtual Guy/Double Jump (32x32).png"), 6, 32, 32, Duration.seconds(0.50), 0, 5);
+        animFall= new AnimationChannel(image("Virtual Guy/Fall (32x32).png"), 1, 32, 32, Duration.seconds(1), 0, 0);
 
         texture = new AnimatedTexture(animIdle);
         texture.loop();
@@ -40,18 +44,24 @@ public class PlayerComponent extends Component {
 
     @Override
     public void onUpdate(double tpf) {
-        if (physics.isMovingX()) {
-            if (texture.getAnimationChannel() != animWalk) {
-                texture.loopAnimationChannel(animWalk);
+        if (physics.isOnGround()) {
+            if (physics.isMovingX()) {
+                if (texture.getAnimationChannel() != animWalk) {
+                    texture.loopAnimationChannel(animWalk);
+                }
+            } else if (texture.getAnimationChannel() != animIdle) {
+                    texture.loopAnimationChannel(animIdle);
+                }
             }
-        } else {
-            if (texture.getAnimationChannel() != animIdle) {
-                texture.loopAnimationChannel(animIdle);
-            }
+        else if (physics.getVelocityY() > 0) {
+            texture.loopAnimationChannel(animFall);
+        } else if (physics.getVelocityY() <= 0 && texture.getAnimationChannel() != animDoubleJump){
+            texture.loopAnimationChannel(animJump);
         }
     }
 
     public void left() {
+        //setscaleX(-1) mirrors character sprite compared to given png
         getEntity().setScaleX(-1);
         physics.setVelocityX(-170);
     }
@@ -72,6 +82,11 @@ public class PlayerComponent extends Component {
         physics.setVelocityY(-250);
 
         jumps--;
+
+        if (jumps == 0) {
+            texture.playAnimationChannel(animDoubleJump);
+        } else
+            texture.loopAnimationChannel(animJump);
     }
 
     public void stomp() {
