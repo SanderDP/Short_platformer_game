@@ -4,4 +4,5 @@ This is a shortburst project made for the subject Java Advanced in the major App
 used tiled program
 
 assets from:
- - https://pixelfrog-assets.itch.io/pixel-adventure-2
+ Enemies: https://pixelfrog-assets.itch.io/pixel-adventure-2
+ Other: https://pixelfrog-assets.itch.io/pixel-adventure-1
