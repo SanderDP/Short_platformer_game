@@ -7,6 +7,8 @@ import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+
 import static com.almasb.fxgl.dsl.FXGL.image;
 import static com.almasb.fxgl.dsl.FXGL.text;
 
@@ -18,6 +20,7 @@ public class PlayerComponent extends Component {
 
     private AnimationChannel animIdle, animWalk, animJump, animDoubleJump, animFall;
     private int jumps = 2;
+    private ArrayList<PowerupType> powerups = new ArrayList<PowerupType>();
 
     public PlayerComponent() {
         animIdle = new AnimationChannel(image("Virtual Guy/Idle (32x32).png"), 11, 32, 32, Duration.seconds(1), 0, 10);
@@ -28,6 +31,8 @@ public class PlayerComponent extends Component {
 
         texture = new AnimatedTexture(animIdle);
         texture.loop();
+
+        powerups.add(PowerupType.NONE);
     }
 
     @Override
@@ -90,6 +95,18 @@ public class PlayerComponent extends Component {
     }
 
     public void stomp() {
+        if (!powerups.contains(PowerupType.STOMP))
+            return;
+
         physics.setVelocityY(1000);
+    }
+
+    public void addPowerup(PowerupType powerupType) {
+        if (powerups.contains(PowerupType.NONE)) {
+            powerups.remove(PowerupType.NONE);
+        }
+        if (!powerups.contains(powerupType)) {
+            powerups.add(powerupType);
+        }
     }
 }

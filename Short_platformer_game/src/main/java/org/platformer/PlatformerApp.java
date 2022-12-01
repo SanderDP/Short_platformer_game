@@ -84,6 +84,7 @@ public class PlatformerApp extends GameApplication {
         getPhysicsWorld().setGravity(0, 750);
 
         onCollision(EntityType.PLAYER, EntityType.POWERUPBOX, (player, powerupbox) -> {
+            player.getComponent(PlayerComponent.class).addPowerup(PowerupType.STOMP);
             //Todo: add minigame for powerup
             powerupbox.removeFromWorld();
         });
