@@ -3,6 +3,7 @@ package org.platformer;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.components.OffscreenCleanComponent;
 import com.almasb.fxgl.dsl.components.ProjectileComponent;
+import com.almasb.fxgl.dsl.views.ScrollingBackgroundView;
 import com.almasb.fxgl.entity.*;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.entity.components.IrremovableComponent;
@@ -19,6 +20,15 @@ import javafx.scene.shape.Rectangle;
 import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class PlatformerFactory implements EntityFactory {
+
+    @Spawns("background")
+    public Entity newBackground(SpawnData data) {
+        return entityBuilder()
+                .view(new ScrollingBackgroundView(texture("Background/forest.png").getImage(), getAppWidth(), getAppHeight()))
+                .zIndex(-1)
+                .with(new IrremovableComponent())
+                .build();
+    }
 
     @Spawns("platform")
     public Entity newPlatform(SpawnData data) {

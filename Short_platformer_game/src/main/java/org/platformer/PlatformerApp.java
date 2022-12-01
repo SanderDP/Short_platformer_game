@@ -16,8 +16,8 @@ public class PlatformerApp extends GameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(50 * 16);
-        settings.setHeight(38 * 16);
+        //settings.setWidth(50 * 16);
+        //settings.setHeight(38 * 16);
 
         //set mode to developer and make developer tools accessible when playing by pressing "1"
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
@@ -79,7 +79,9 @@ public class PlatformerApp extends GameApplication {
         getGameWorld().addEntityFactory(new PlatformerFactory());
         setLevelFromMap("tmx/platformer.tmx");
 
-        player = spawn("player", 30, 550);
+        player = spawn("player", 30, 30);
+
+        spawn("background");
 
         Viewport viewport = getGameScene().getViewport();
         viewport.setBounds(-100, 0, 250 * 16, getAppHeight() );
