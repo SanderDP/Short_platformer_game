@@ -21,15 +21,6 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class PlatformerFactory implements EntityFactory {
 
-    @Spawns("background")
-    public Entity newBackground(SpawnData data) {
-        return entityBuilder()
-                .view(new ScrollingBackgroundView(texture("Background/forest.png").getImage(), getAppWidth(), getAppHeight()))
-                .zIndex(-1)
-                .with(new IrremovableComponent())
-                .build();
-    }
-
     @Spawns("platform")
     public Entity newPlatform(SpawnData data) {
         return entityBuilder(data)

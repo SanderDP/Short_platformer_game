@@ -81,7 +81,7 @@ public class PlatformerApp extends GameApplication {
 
         player = spawn("player", 30, 30);
 
-        spawn("background");
+        getGameScene().setBackgroundRepeat("Background/Blue.png");
 
         Viewport viewport = getGameScene().getViewport();
         viewport.setBounds(-100, 0, 250 * 16, getAppHeight() );
