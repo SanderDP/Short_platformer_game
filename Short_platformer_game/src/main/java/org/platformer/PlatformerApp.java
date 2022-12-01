@@ -4,9 +4,11 @@ import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.PhysicsComponent;
+import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 
@@ -87,6 +89,10 @@ public class PlatformerApp extends GameApplication {
             player.getComponent(PlayerComponent.class).addPowerup(PowerupType.STOMP);
             //Todo: add minigame for powerup
             powerupbox.removeFromWorld();
+        });
+
+        onCollisionOneTimeOnly(EntityType.PLAYER, EntityType.GOAL, (player, goal) -> {
+            getDialogService().showMessageBox("Game complete", getGameController()::exit);
         });
     }
 

@@ -47,6 +47,16 @@ public class PlatformerFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("goal")
+    public Entity newGoal(SpawnData data) {
+        return entityBuilder(data)
+                .type(EntityType.GOAL)
+                .bbox(new HitBox(new Point2D(9, 20), BoundingShape.box(46, 44)))
+                .with(new GoalComponent())
+                .with(new CollidableComponent(true))
+                .build();
+    }
+
     @Spawns("coin")
     public Entity newCoin(SpawnData data) {
         Circle view = new Circle(data.<Integer>get("width") / 2, Color.GOLD);
@@ -62,6 +72,7 @@ public class PlatformerFactory implements EntityFactory {
 
     @Spawns("powerupbox")
     public Entity newPowerupbox(SpawnData data) {
+        //HitBox bottomHitbox = new HitBox(new Point2D(4, 22), BoundingShape.box(20, 2));
         return entityBuilder(data)
                 .type(EntityType.POWERUPBOX)
                 .bbox(new HitBox(new Point2D(4, 2), BoundingShape.box(20, 20)))

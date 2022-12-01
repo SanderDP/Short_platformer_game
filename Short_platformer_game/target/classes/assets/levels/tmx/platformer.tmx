@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="38" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="64">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="38" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="67">
  <tileset firstgid="1" name="Terrain (16x16)" tilewidth="16" tileheight="16" tilecount="242" columns="22">
   <image source="Terrain (16x16).png" width="352" height="176"/>
  </tileset>
@@ -61,5 +61,6 @@
   <object id="61" type="coin" x="496" y="464" width="16" height="16"/>
   <object id="62" type="coin" x="576" y="512" width="16" height="16"/>
   <object id="63" type="powerupbox" x="112" y="464" width="16" height="16"/>
+  <object id="64" type="goal" x="736" y="528" width="64" height="64"/>
  </objectgroup>
 </map>
