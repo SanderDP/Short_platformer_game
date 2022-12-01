@@ -13,13 +13,13 @@ import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
+import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class PlatformerFactory implements EntityFactory {
 
     @Spawns("platform")
     public Entity newPlatform(SpawnData data) {
-        return FXGL.entityBuilder(data)
+        return entityBuilder(data)
                 .type(EntityType.PLATFORM)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
@@ -52,10 +52,20 @@ public class PlatformerFactory implements EntityFactory {
         Circle view = new Circle(data.<Integer>get("width") / 2, Color.GOLD);
         view.setCenterX(8);
         view.setCenterY(-8);
-        return FXGL.entityBuilder(data)
+        return entityBuilder(data)
                 .type(EntityType.COIN)
                 .bbox(new HitBox(new Point2D(0, -16), BoundingShape.circle(data.<Integer>get("width") / 2)))
                 .view(view)
+                .with(new CollidableComponent(true))
+                .build();
+    }
+
+    @Spawns("powerupbox")
+    public Entity newPowerupbox(SpawnData data) {
+        return entityBuilder(data)
+                .type(EntityType.POWERUPBOX)
+                .bbox(new HitBox(new Point2D(4, 2), BoundingShape.box(20, 20)))
+                .with(new PowerupboxComponent())
                 .with(new CollidableComponent(true))
                 .build();
     }
