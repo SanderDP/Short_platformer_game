@@ -6,6 +6,8 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.PhysicsComponent;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
@@ -70,11 +72,29 @@ public class PlatformerApp extends GameApplication {
         getGameWorld().addEntityFactory(new PlatformerFactory());
         setLevelFromMap("tmx/platformer.tmx");
 
-        player = spawn("player", 50, 50);
+        player = spawn("player", 30, 550);
 
         Viewport viewport = getGameScene().getViewport();
         viewport.setBounds(-100, 0, 250 * 16, getAppHeight() );
         viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+    }
+
+    @Override
+    protected void initPhysics() {
+        getPhysicsWorld().setGravity(0, 750);
+    }
+
+    @Override
+    protected void onUpdate(double tpf) {
+        if (player.getY() > getAppHeight()) {
+            onPlayerDied();
+        }
+    }
+
+    private void onPlayerDied() {
+        if (player != null) {
+            player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(30, 550));
+        }
     }
 
     public static void main(String[] args) {
