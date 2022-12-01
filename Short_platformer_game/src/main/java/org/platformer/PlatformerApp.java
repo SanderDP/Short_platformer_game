@@ -9,8 +9,19 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import kotlin.sequences.Sequence;
+
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+import static javafx.scene.input.KeyCode.*;
+import static javafx.scene.input.KeyCode.T;
 
 public class PlatformerApp extends GameApplication {
 
@@ -93,8 +104,29 @@ public class PlatformerApp extends GameApplication {
         getPhysicsWorld().setGravity(0, 750);
 
         onCollision(EntityType.PLAYER, EntityType.POWERUPBOX, (player, powerupbox) -> {
-            player.getComponent(PlayerComponent.class).addPowerup(PowerupType.SHOOT);
-            //Todo: add minigame for powerup
+            ArrayList<KeyCode> sequence = new ArrayList<>();
+            Random rand = new Random();
+            List<KeyCode> inputList = Arrays.asList(UP, DOWN, RIGHT, LEFT);
+
+            int numberOfElements = 8;
+
+            for (int i = 0; i < numberOfElements; i++) {
+                int randomIndex = rand.nextInt(inputList.size());
+                sequence.add(inputList.get(randomIndex));
+            }
+            getMiniGameService().startTriggerSequence(sequence, result -> {
+                PowerupType pt;
+                String message;
+                if (result.isSuccess()) {
+                    pt = PowerupType.SHOOT;
+                    message = "Press \"z\" to shoot!";
+                } else {
+                    pt = PowerupType.STOMP;
+                    message = "Press down to slam down with force!";
+                }
+                player.getComponent(PlayerComponent.class).addPowerup(pt);
+                getNotificationService().pushNotification(message);
+            });
             powerupbox.removeFromWorld();
         });
 
