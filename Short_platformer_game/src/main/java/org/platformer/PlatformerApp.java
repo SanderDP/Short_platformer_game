@@ -21,14 +21,13 @@ import java.util.Random;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static javafx.scene.input.KeyCode.*;
-import static javafx.scene.input.KeyCode.T;
 
 public class PlatformerApp extends GameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
-        //settings.setWidth(50 * 16);
-        //settings.setHeight(38 * 16);
+        settings.setWidth(1000);
+        settings.setHeight(800);
 
         //set mode to developer and make developer tools accessible when playing by pressing "1"
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
@@ -103,7 +102,10 @@ public class PlatformerApp extends GameApplication {
     protected void initPhysics() {
         getPhysicsWorld().setGravity(0, 750);
 
+        //set collision rule for player and powerupbox
         onCollision(EntityType.PLAYER, EntityType.POWERUPBOX, (player, powerupbox) -> {
+
+            //generate a random sequence with arrow keys
             ArrayList<KeyCode> sequence = new ArrayList<>();
             Random rand = new Random();
             List<KeyCode> inputList = Arrays.asList(UP, DOWN, RIGHT, LEFT);
@@ -114,6 +116,8 @@ public class PlatformerApp extends GameApplication {
                 int randomIndex = rand.nextInt(inputList.size());
                 sequence.add(inputList.get(randomIndex));
             }
+
+            //play triggersequence minigame with generated sequence
             getMiniGameService().startTriggerSequence(sequence, result -> {
                 PowerupType pt;
                 String message;
@@ -127,10 +131,13 @@ public class PlatformerApp extends GameApplication {
                 player.getComponent(PlayerComponent.class).addPowerup(pt);
                 getNotificationService().pushNotification(message);
             });
+            //delete touched powerupbox
             powerupbox.removeFromWorld();
         });
 
+        //set collision rule player and goal
         onCollisionOneTimeOnly(EntityType.PLAYER, EntityType.GOAL, (player, goal) -> {
+            //show complete level and exit the game
             getDialogService().showMessageBox("Game complete", getGameController()::exit);
         });
     }
