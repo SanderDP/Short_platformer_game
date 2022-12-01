@@ -1,6 +1,8 @@
 package org.platformer;
 
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.dsl.components.OffscreenCleanComponent;
+import com.almasb.fxgl.dsl.components.ProjectileComponent;
 import com.almasb.fxgl.entity.*;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.entity.components.IrremovableComponent;
@@ -12,6 +14,7 @@ import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -77,6 +80,25 @@ public class PlatformerFactory implements EntityFactory {
                 .type(EntityType.POWERUPBOX)
                 .bbox(new HitBox(new Point2D(4, 2), BoundingShape.box(20, 20)))
                 .with(new PowerupboxComponent())
+                .with(new CollidableComponent(true))
+                .build();
+    }
+
+    @Spawns("bullet")
+    public Entity newBullet(SpawnData data) {
+        Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+        Point2D direction;
+        if (player.getScaleX() > 0) {
+            direction = new Point2D(100000000, data.getY());
+        } else  {
+            direction = new Point2D(-100000000, data.getY());
+        }
+
+        return entityBuilder(data)
+                .type(EntityType.BULLET)
+                .viewWithBBox(new Rectangle(10, 2, Color.BLACK))
+                .with(new ProjectileComponent(direction, 1000))
+                .with(new OffscreenCleanComponent())
                 .with(new CollidableComponent(true))
                 .build();
     }

@@ -4,11 +4,9 @@ import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
-import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.PhysicsComponent;
-import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 
@@ -67,6 +65,13 @@ public class PlatformerApp extends GameApplication {
                 player.getComponent(PlayerComponent.class).stomp();
             }
         }, KeyCode.DOWN);
+
+        getInput().addAction(new UserAction("Shoot") {
+            @Override
+            protected void onActionBegin() {
+                player.getComponent(PlayerComponent.class).shoot();
+            }
+        }, KeyCode.Z);
     }
 
     @Override
@@ -86,7 +91,7 @@ public class PlatformerApp extends GameApplication {
         getPhysicsWorld().setGravity(0, 750);
 
         onCollision(EntityType.PLAYER, EntityType.POWERUPBOX, (player, powerupbox) -> {
-            player.getComponent(PlayerComponent.class).addPowerup(PowerupType.STOMP);
+            player.getComponent(PlayerComponent.class).addPowerup(PowerupType.SHOOT);
             //Todo: add minigame for powerup
             powerupbox.removeFromWorld();
         });

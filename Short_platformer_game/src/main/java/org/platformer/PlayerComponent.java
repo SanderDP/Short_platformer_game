@@ -1,5 +1,6 @@
 package org.platformer;
 
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
@@ -99,6 +100,13 @@ public class PlayerComponent extends Component {
             return;
 
         physics.setVelocityY(1000);
+    }
+
+    public void shoot() {
+        if (!powerups.contains(PowerupType.SHOOT))
+            return;
+
+        FXGL.spawn("bullet", entity.getCenter());
     }
 
     public void addPowerup(PowerupType powerupType) {
