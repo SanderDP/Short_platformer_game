@@ -3,9 +3,8 @@ package org.platformer;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.texture.Texture;
-import javafx.geometry.Point2D;
 
-import static com.almasb.fxgl.dsl.FXGL.*;
+import static com.almasb.fxgl.dsl.FXGL.image;
 
 public class PowerupboxComponent extends Component {
 

@@ -1,10 +1,11 @@
 package org.platformer;
 
-import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.components.OffscreenCleanComponent;
 import com.almasb.fxgl.dsl.components.ProjectileComponent;
-import com.almasb.fxgl.dsl.views.ScrollingBackgroundView;
-import com.almasb.fxgl.entity.*;
+import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.EntityFactory;
+import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.entity.components.IrremovableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
@@ -17,7 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-import static com.almasb.fxgl.dsl.FXGL.*;
+import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
+import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 
 public class PlatformerFactory implements EntityFactory {
 

@@ -11,7 +11,6 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 
 import static com.almasb.fxgl.dsl.FXGL.image;
-import static com.almasb.fxgl.dsl.FXGL.text;
 
 public class PlayerComponent extends Component {
 

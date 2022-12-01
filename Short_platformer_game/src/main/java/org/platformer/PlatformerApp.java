@@ -9,11 +9,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import kotlin.sequences.Sequence;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
