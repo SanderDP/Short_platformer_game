@@ -7,23 +7,25 @@ import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.PhysicsComponent;
+import com.almasb.fxgl.texture.AnimatedTexture;
+import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
-import static javafx.scene.input.KeyCode.*;
 
 public class PlatformerApp extends GameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(1000);
-        settings.setHeight(800);
+        settings.setWidth(64 * 16);
+        settings.setHeight(40 * 16);
+        settings.setTitle("Short platformer game");
+        settings.setVersion("0.1");
 
         //set mode to developer and make developer tools accessible when playing by pressing "1"
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
@@ -78,6 +80,35 @@ public class PlatformerApp extends GameApplication {
                 player.getComponent(PlayerComponent.class).shoot();
             }
         }, KeyCode.Z);
+
+        getInput().addAction(new UserAction("getCoordinates") {
+            @Override
+            protected void onActionBegin() {
+                System.out.println(player.getCenter());;
+            }
+        }, KeyCode.C);
+    }
+
+    @Override
+    protected void initGameVars(Map<String, Object> vars) {
+        vars.put("Fruit Collected", 0);
+    }
+
+    @Override
+    protected void initUI() {
+        Text textFruitAmount = new Text();
+        textFruitAmount.setTranslateX(50); // x = 50
+        textFruitAmount.setTranslateY(100); // y = 100
+
+        textFruitAmount.textProperty().bind(getWorldProperties().intProperty("Fruit Collected").asString());
+
+        getGameScene().addUINode(textFruitAmount); // add to the scene graph
+
+        var fruitTexture = new AnimatedTexture(new AnimationChannel(image("Items/Fruits/Apple.png"), 17, 32, 32, Duration.seconds(10), 0, 16));
+        fruitTexture.setTranslateX(50);
+        fruitTexture.setTranslateY(100);
+
+        getGameScene().addUINode(fruitTexture);
     }
 
     @Override
@@ -85,18 +116,19 @@ public class PlatformerApp extends GameApplication {
         getGameWorld().addEntityFactory(new PlatformerFactory());
         setLevelFromMap("tmx/platformer.tmx");
 
-        player = spawn("player", 30, 30);
+        player = spawn("player", 87, 578);
 
         getGameScene().setBackgroundRepeat("Background/Blue.png");
 
         Viewport viewport = getGameScene().getViewport();
-        viewport.setBounds(-100, 0, 250 * 16, getAppHeight() );
+        viewport.setBounds(0, 0, getAppWidth(), getAppHeight() );
+        viewport.setZoom(2);
         viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
     }
 
     @Override
     protected void initPhysics() {
-        getPhysicsWorld().setGravity(0, 750);
+        getPhysicsWorld().setGravity(0, 700);
 
         //set collision rule for player and powerupbox
         onCollision(EntityType.PLAYER, EntityType.POWERUPBOX, (player, powerupbox) -> {
@@ -104,7 +136,7 @@ public class PlatformerApp extends GameApplication {
             //generate a random sequence with arrow keys
             ArrayList<KeyCode> sequence = new ArrayList<>();
             Random rand = new Random();
-            List<KeyCode> inputList = Arrays.asList(UP, DOWN, RIGHT, LEFT);
+            List<KeyCode> inputList = Arrays.asList(KeyCode.UP, KeyCode.DOWN, KeyCode.RIGHT, KeyCode.LEFT);
 
             int numberOfElements = 8;
 

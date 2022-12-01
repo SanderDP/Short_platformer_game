@@ -63,8 +63,8 @@ public class PlatformerFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("coin")
-    public Entity newCoin(SpawnData data) {
+    @Spawns("fruit")
+    public Entity newFruit(SpawnData data) {
         Circle view = new Circle(data.<Integer>get("width") / 2, Color.GOLD);
         view.setCenterX(8);
         view.setCenterY(-8);
