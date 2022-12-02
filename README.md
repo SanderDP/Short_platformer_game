@@ -5,4 +5,6 @@ assets from:
 
  Enemies: https://pixelfrog-assets.itch.io/pixel-adventure-2
  
+ Heart: https://opengameart.org/content/heart-pixel-art by Dansevenstar
+ 
  Other: https://pixelfrog-assets.itch.io/pixel-adventure-1
