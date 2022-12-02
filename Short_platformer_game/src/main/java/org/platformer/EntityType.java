@@ -1,5 +1,5 @@
 package org.platformer;
 
 public enum EntityType {
-    PLAYER, COIN, PLATFORM, GOAL, POWERUPBOX, BULLET
+    PLAYER, FRUIT, PLATFORM, GOAL, POWERUPBOX, BULLET
 }

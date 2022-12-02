@@ -69,7 +69,7 @@ public class PlatformerFactory implements EntityFactory {
         view.setCenterX(8);
         view.setCenterY(-8);
         return entityBuilder(data)
-                .type(EntityType.COIN)
+                .type(EntityType.FRUIT)
                 .bbox(new HitBox(new Point2D(0, -16), BoundingShape.circle(data.<Integer>get("width") / 2)))
                 .view(view)
                 .with(new CollidableComponent(true))

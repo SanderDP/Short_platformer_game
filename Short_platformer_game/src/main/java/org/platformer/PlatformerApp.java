@@ -9,8 +9,12 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
+import com.almasb.fxgl.texture.Texture;
+import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -33,6 +37,8 @@ public class PlatformerApp extends GameApplication {
     }
 
     private Entity player;
+
+    private ArrayList<Node> lives = new ArrayList<>(); //make an arraylist of nodes wherein stored is the generated ui nodes for hearts / lives
 
     @Override
     protected void initInput() {
@@ -92,23 +98,38 @@ public class PlatformerApp extends GameApplication {
     @Override
     protected void initGameVars(Map<String, Object> vars) {
         vars.put("Fruit Collected", 0);
+        vars.put("Lives", 3);
     }
 
     @Override
     protected void initUI() {
-        Text textFruitAmount = new Text();
-        textFruitAmount.setTranslateX(50); // x = 50
-        textFruitAmount.setTranslateY(100); // y = 100
+        var fruitTexture = getAssetLoader().loadTexture("Items/Fruits/Apple (64x64).png");
 
-        textFruitAmount.textProperty().bind(getWorldProperties().intProperty("Fruit Collected").asString());
+        for (int i = 0; i < getWorldProperties().intProperty("Lives").get(); i++) { // generate amount of full hearts in ai as the same amount of lives set in gameVars
+            Texture heartTexture = getAssetLoader().loadTexture("Items/Other/Heart (64x64).png");
+            lives.add(heartTexture); // add full heart node to global Arraylist lives
+            if (i > 0) {
+                heartTexture.setTranslateX(66 * i);
+            } else {
+                heartTexture.setTranslateX(0);
+            }
+            getGameScene().addUINode(heartTexture); // add the generated full heart node to ui
+        }
 
-        getGameScene().addUINode(textFruitAmount); // add to the scene graph
-
-        var fruitTexture = new AnimatedTexture(new AnimationChannel(image("Items/Fruits/Apple.png"), 17, 32, 32, Duration.seconds(10), 0, 16));
-        fruitTexture.setTranslateX(50);
-        fruitTexture.setTranslateY(100);
-
+        fruitTexture.setY(64);
         getGameScene().addUINode(fruitTexture);
+
+        Text textFruitAmount = new Text();
+        textFruitAmount.setFont(new Font(50));
+        textFruitAmount.setX(64);
+        textFruitAmount.setY(119);
+
+        textFruitAmount.textProperty().bind(getWorldProperties().intProperty("Fruit Collected").asString()); // text in ui shows amount of fruit collected
+
+        getGameScene().addUINode(textFruitAmount);
+        for (Node n : getGameScene().getUINodes()) {
+            System.out.println(n.getTranslateX());
+        }
     }
 
     @Override
@@ -129,6 +150,15 @@ public class PlatformerApp extends GameApplication {
     @Override
     protected void initPhysics() {
         getPhysicsWorld().setGravity(0, 700);
+
+        // set collision rule for player and fruit
+        onCollision(EntityType.PLAYER, EntityType.FRUIT, (player, fruit) -> {
+            var fruitCollected = getWorldProperties().intProperty("Fruit Collected");
+            if (fruitCollected.isEqualTo(99).get())
+                fruitCollected.set(0); //todo: check if this works + add life when this happens
+            inc("Fruit Collected", +1);
+            fruit.removeFromWorld(); //delete touched fruit
+        });
 
         //set collision rule for player and powerupbox
         onCollision(EntityType.PLAYER, EntityType.POWERUPBOX, (player, powerupbox) -> {
@@ -159,14 +189,12 @@ public class PlatformerApp extends GameApplication {
                 player.getComponent(PlayerComponent.class).addPowerup(pt);
                 getNotificationService().pushNotification(message);
             });
-            //delete touched powerupbox
-            powerupbox.removeFromWorld();
+            powerupbox.removeFromWorld(); //delete touched powerupbox
         });
 
         //set collision rule player and goal
         onCollisionOneTimeOnly(EntityType.PLAYER, EntityType.GOAL, (player, goal) -> {
-            //show complete level and exit the game
-            getDialogService().showMessageBox("Game complete", getGameController()::exit);
+            getDialogService().showMessageBox("You win!", getGameController()::exit); //show complete level and exit the game
         });
     }
 
@@ -178,8 +206,25 @@ public class PlatformerApp extends GameApplication {
     }
 
     private void onPlayerDied() {
+        var lifeAmount = getWorldProperties().intProperty("Lives");
+
+        var emptyHeartTexture = getAssetLoader().loadTexture("Items/Other/Heart Empty (64x64).png");
+
+        emptyHeartTexture.setTranslateX(getGameScene().getUINodes().get(lifeAmount.get() - 1).getTranslateX());
+        //emptyHeartTexture.setTranslateX(lives.get(lifeAmount.get() - 1).getTranslateX());//set x-index of empty heart at same as just removed full heart
+
+        getGameScene().removeUINode(getGameScene().getUINodes().get(lifeAmount.get() - 1));
+        //getGameScene().removeUINode(lives.get(lifeAmount.get() - 1)); //remove ui node at location stored at index(amount of lives - 1) of global Arraylist lives
+
+        getGameScene().addUINode(emptyHeartTexture); //set empty heart node at place of previous full heart node's location
+
+        inc("Lives", -1); //decrease the amount of lives the player has by one
+
         if (player != null) {
-            player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(30, 550));
+            if (getWorldProperties().intProperty("Lives").isNotEqualTo(0).get()) //check whether player has lives left
+                player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(30, 550)); //respawn player
+            else
+                getDialogService().showMessageBox("Game Over", getGameController()::exit);
         }
     }
 

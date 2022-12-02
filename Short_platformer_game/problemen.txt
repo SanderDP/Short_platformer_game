@@ -3,3 +3,22 @@
 	1.0.1 was niet meer gesupport => 1.4.2 geinstalleerd
 
 - FXGL.getGameWorld().setLevel(FXGL.setLevelFromMap("tmx/platformer.tmx")); moest gewoon FXGL.setLevelFromMap("tmx/platformer.tmx") zijn
+
+- Ui compatible maken met vars.put("Lives", 3); => de Ui moet aantal harten tonen naargelang van dit nummer
+    probleem: getGameScene().getUINodes().set(getWorldProperties().intProperty("Lives").get(), getAssetLoader().loadTexture("Items/Other/Heart Empty (64x64).png")); werkt niet
+    reden: Abstractlist.set(int index, Node node) is niet gesupport en getGameScene.getUINodes() is een Abstractlist => UnsupportedOperationException
+
+    oplossing 1: delete oude node en dan add de juiste nodes
+        probleem: getGameScene().removeUINode(Node node) is de enige optie om een node te verwijderen
+        uitleg probleem: getGamescene() heeft enkel .getUINodes() functie en geen om 1 enkele node op te vragen
+        globale Arraylist<Node> lives toegevoegd waarin ik de nodes opsla en deze gebruik om de translateX data op te vragen, te geven aan nieuwe node en dan oude node te verwijderen
+
+    oplossing 1.2: gebruik getGamescene().getUINodes().get() ipv globale Arraylist<Node> lives
+        deze oplossing realiseerde ik toen ik het vorige probleem probeerde uit te schrijven
+        code herkeken en gezien dat de getUINodes de functio .get() had om een bestaande node op te vragen
+            BELANGRIJK: de volgorde waarin de nodes worden toegevoegd in initUI is van groot belang als we deze later opvragen volgens index hun index
+
+
+- UINode only accepts node but I want to add container with 3 nodes in it
+
+- met gamevars dat intigers zijn niet .add(amount) of .subtract(amount) doen maar functie inc(variabele, +/-amount)
