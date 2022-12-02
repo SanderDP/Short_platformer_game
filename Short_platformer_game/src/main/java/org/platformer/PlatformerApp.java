@@ -158,7 +158,7 @@ public class PlatformerApp extends GameApplication {
             inc("Fruit Collected", +1);
 
             if (fruitCollected.intValue() >= 100) { //if amount of fruits collected is 100 set it to 0 and add a life
-                fruitCollected.set(99); //todo: set back to 0
+                fruitCollected.set(0);
 
                 var lives = getWorldProperties().intProperty("Lives");
 
@@ -174,8 +174,20 @@ public class PlatformerApp extends GameApplication {
 
                     for (Node n : UINodes) //add all nodes from global Arraylist UINodes to gamescene
                         getGameScene().addUINode(n);
+
                 } else {
-                    //todo: add what to do if adding more hearts than initial amount
+                    inc("Lives", +1);
+                    int amountOfExtraLives = lives.get() - initialAmountLives;
+                    var blueHeartTexture = getAssetLoader().loadTexture("Items/Other/Heart Blue (64x64).png");
+
+                    blueHeartTexture.setTranslateX(UINodes.get(initialAmountLives - 1).getTranslateX() + (66 * amountOfExtraLives)); // set location of new UINode
+
+                    UINodes.add(blueHeartTexture); // add extra heart to global Arraylist UINodes
+
+                    getGameScene().clearUINodes(); // clear all UINodes
+
+                    for (Node n : UINodes) //add all nodes from global Arraylist UINodes to gamescene
+                        getGameScene().addUINode(n);
                 }
             }
             fruit.removeFromWorld(); //delete touched fruit
@@ -229,17 +241,20 @@ public class PlatformerApp extends GameApplication {
     private void onPlayerDied() {
         var lives = getWorldProperties().intProperty("Lives");
 
-        var emptyHeartTexture = getAssetLoader().loadTexture("Items/Other/Heart Empty (64x64).png"); //set texture of new UINode
+        if (lives.get() > initialAmountLives) { // check if player has blue hearts
+            UINodes.remove(UINodes.size() - 1); // removes the latest added UINode; can only delete blue heart nodes
+        } else {
+            var emptyHeartTexture = getAssetLoader().loadTexture("Items/Other/Heart Empty (64x64).png"); //set texture of new UINode
 
-        emptyHeartTexture.setTranslateX(UINodes.get(lives.get() - 1).getTranslateX()); //set location of new UINode as the location of node it is replacing
+            emptyHeartTexture.setTranslateX(UINodes.get(lives.get() - 1).getTranslateX()); //set location of new UINode as the location of node it is replacing
+
+            UINodes.set(lives.get() - 1, emptyHeartTexture); // replace old node with new one on same index in global ArrayList UINodes
+        }
 
         getGameScene().clearUINodes(); //clear all UINodes
 
-        UINodes.set(lives.get() - 1,emptyHeartTexture); // replace old node with new one on same index in global ArrayList UINodes
-
-        for (Node n : UINodes) { //add all nodes from global Arraylist UINodes to gamescene
+        for (Node n : UINodes) //add all nodes from global Arraylist UINodes to gamescene
             getGameScene().addUINode(n);
-        }
 
         inc("Lives", -1); //decrease the amount of lives the player has by one
 
