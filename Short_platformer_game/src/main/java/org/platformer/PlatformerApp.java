@@ -38,7 +38,7 @@ public class PlatformerApp extends GameApplication {
 
     private Entity player;
 
-    private int amountOfUINodesNotHearts= 0; // due to how hearts are added and removed depending on amount of lives this variable is necessary get the right indexes
+    private ArrayList<Node> UINodes = new ArrayList<>();
 
     @Override
     protected void initInput() {
@@ -95,19 +95,32 @@ public class PlatformerApp extends GameApplication {
         }, KeyCode.C);
     }
 
+    int initialAmountLives = 5;
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        vars.put("Fruit Collected", 0);
-        vars.put("Lives", 3);
+        vars.put("Fruit Collected", 98);
+        vars.put("Lives", initialAmountLives);
     }
 
     @Override
     protected void initUI() {
+
+        for (int i = 0; i < getWorldProperties().intProperty("Lives").get(); i++) { // generate amount of full hearts in ai as the same amount of lives set in gameVars
+            Texture heartTexture = getAssetLoader().loadTexture("Items/Other/Heart (64x64).png");
+            if (i > 0) {
+                heartTexture.setTranslateX(66 * i);
+            } else {
+                heartTexture.setTranslateX(0);
+            }
+            UINodes.add(heartTexture);
+            getGameScene().addUINode(heartTexture); // add the generated full heart node to ui
+        }
+
         var fruitTexture = getAssetLoader().loadTexture("Items/Fruits/Apple (64x64).png");
 
         fruitTexture.setY(64);
         getGameScene().addUINode(fruitTexture);
-        amountOfUINodesNotHearts++;
+        UINodes.add(fruitTexture);
 
         Text textFruitAmount = new Text();
         textFruitAmount.setFont(new Font(50));
@@ -117,21 +130,7 @@ public class PlatformerApp extends GameApplication {
         textFruitAmount.textProperty().bind(getWorldProperties().intProperty("Fruit Collected").asString()); // text in ui shows amount of fruit collected
 
         getGameScene().addUINode(textFruitAmount);
-        amountOfUINodesNotHearts++;
-
-        for (int i = 0; i < getWorldProperties().intProperty("Lives").get(); i++) { // generate amount of full hearts in ai as the same amount of lives set in gameVars
-            Texture heartTexture = getAssetLoader().loadTexture("Items/Other/Heart (64x64).png");
-            if (i > 0) {
-                heartTexture.setTranslateX(66 * i);
-            } else {
-                heartTexture.setTranslateX(0);
-            }
-            getGameScene().addUINode(heartTexture); // add the generated full heart node to ui
-        }
-
-        for (Node n : getGameScene().getUINodes()) {
-            System.out.println(n.getTranslateX());
-        }
+        UINodes.add(textFruitAmount);
     }
 
     @Override
@@ -156,9 +155,29 @@ public class PlatformerApp extends GameApplication {
         // set collision rule for player and fruit
         onCollision(EntityType.PLAYER, EntityType.FRUIT, (player, fruit) -> {
             var fruitCollected = getWorldProperties().intProperty("Fruit Collected");
-            if (fruitCollected.isEqualTo(99).get())
-                fruitCollected.set(0); //todo: check if this works + add life when this happens
             inc("Fruit Collected", +1);
+
+            if (fruitCollected.intValue() >= 100) { //if amount of fruits collected is 100 set it to 0 and add a life
+                fruitCollected.set(99); //todo: set back to 0
+
+                var lives = getWorldProperties().intProperty("Lives");
+
+                if (lives.intValue() < initialAmountLives) { // check if replacing already existing UINode or adding one
+                    inc("Lives", +1); // increment amount of lives by one
+                    var heartTexture = getAssetLoader().loadTexture("Items/Other/Heart (64x64).png");
+
+                    heartTexture.setTranslateX(UINodes.get(lives.get() - 1).getTranslateX()); // set location of new UINode as the location of node it is replacing
+
+                    getGameScene().clearUINodes(); // clear all UINodes
+
+                    UINodes.set(lives.get() - 1,heartTexture); // replace old node with new one on same index in global ArrayList UINodes
+
+                    for (Node n : UINodes) //add all nodes from global Arraylist UINodes to gamescene
+                        getGameScene().addUINode(n);
+                } else {
+                    //todo: add what to do if adding more hearts than initial amount
+                }
+            }
             fruit.removeFromWorld(); //delete touched fruit
         });
 
@@ -208,15 +227,19 @@ public class PlatformerApp extends GameApplication {
     }
 
     private void onPlayerDied() {
-        var lifeAmount = getWorldProperties().intProperty("Lives");
+        var lives = getWorldProperties().intProperty("Lives");
 
-        var emptyHeartTexture = getAssetLoader().loadTexture("Items/Other/Heart Empty (64x64).png");
+        var emptyHeartTexture = getAssetLoader().loadTexture("Items/Other/Heart Empty (64x64).png"); //set texture of new UINode
 
-        emptyHeartTexture.setTranslateX(getGameScene().getUINodes().get(amountOfUINodesNotHearts + (lifeAmount.get() - 1)).getTranslateX());
+        emptyHeartTexture.setTranslateX(UINodes.get(lives.get() - 1).getTranslateX()); //set location of new UINode as the location of node it is replacing
 
-        getGameScene().removeUINode(getGameScene().getUINodes().get(amountOfUINodesNotHearts + (lifeAmount.get() - 1)));
+        getGameScene().clearUINodes(); //clear all UINodes
 
-        getGameScene().addUINode(emptyHeartTexture); //set empty heart node at place of previous full heart node's location
+        UINodes.set(lives.get() - 1,emptyHeartTexture); // replace old node with new one on same index in global ArrayList UINodes
+
+        for (Node n : UINodes) { //add all nodes from global Arraylist UINodes to gamescene
+            getGameScene().addUINode(n);
+        }
 
         inc("Lives", -1); //decrease the amount of lives the player has by one
 

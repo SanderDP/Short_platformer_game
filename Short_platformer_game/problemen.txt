@@ -13,12 +13,28 @@
         uitleg probleem: getGamescene() heeft enkel .getUINodes() functie en geen om 1 enkele node op te vragen
         globale Arraylist<Node> lives toegevoegd waarin ik de nodes opsla en deze gebruik om de translateX data op te vragen, te geven aan nieuwe node en dan oude node te verwijderen
 
-    oplossing 1.2: gebruik getGamescene().getUINodes().get() ipv globale Arraylist<Node> lives
+    oplossing 2: gebruik getGamescene().getUINodes().get() ipv globale Arraylist<Node> lives
         deze oplossing realiseerde ik toen ik het vorige probleem probeerde uit te schrijven
         code herkeken en gezien dat de getUINodes de functio .get() had om een bestaande node op te vragen
             BELANGRIJK: de volgorde waarin de nodes worden toegevoegd in initUI is van groot belang als we deze later opvragen volgens index hun index
 
+   nieuw probleem:
+        samengevat: met een list werken waarbij men enkel op het einde kan toevoegen of specifieke nodes verwijderen is moeilijk als je ook op die specifieke plaats iets anders wilt zetten
+        bij het proberen toevoegen van een full heart als player 100 fruit collect was de wiskunde te moeilijk om met de getGamescene.getUINodes() te werken
+        want deze voegt enkel uinodes toe aan het einde van de list => het vinden van een specifieke node en deze vervangen is enorm moeilijk bij het abnormaal toevoegen en verwijderen van levens
+
+   => back to solution 1:
+      globale list met alle UINodes gebruiken
+      hierop kan ik set(index, node) wel gebruiken
+      Code:
+        - geef locatie van oude node door aan vervangende node
+        - add nieuwe node aan globale list
+        - remove alle nodes van Gamescene met .clearUINodes();
+        - plaats alle nodes van globale list in gameScene;
+
+
 
 - UINode only accepts node but I want to add container with 3 nodes in it
+   oplossing: gewoon 1 voor 1 toegevoegd
 
-- met gamevars dat intigers zijn niet .add(amount) of .subtract(amount) doen maar functie inc(variabele, +/-amount)
+- met gamevars dat intigers zijn niet .add(amount) of .subtract(amount) doen maar functie inc(variabele, +/-amount) [increment]
