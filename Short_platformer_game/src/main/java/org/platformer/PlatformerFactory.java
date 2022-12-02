@@ -65,13 +65,10 @@ public class PlatformerFactory implements EntityFactory {
 
     @Spawns("fruit")
     public Entity newFruit(SpawnData data) {
-        Circle view = new Circle(data.<Integer>get("width") / 2, Color.GOLD);
-        view.setCenterX(8);
-        view.setCenterY(-8);
         return entityBuilder(data)
                 .type(EntityType.FRUIT)
-                .bbox(new HitBox(new Point2D(0, -16), BoundingShape.circle(data.<Integer>get("width") / 2)))
-                .view(view)
+                .bbox(new HitBox(new Point2D(data.<Integer>get("width") / 2, data.<Integer>get("width") / 2), BoundingShape.circle(data.<Integer>get("width") / 2)))
+                .with(new FruitComponent())
                 .with(new CollidableComponent(true))
                 .build();
     }
