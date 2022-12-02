@@ -5,11 +5,15 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.input.KeyTrigger;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.texture.Texture;
+import com.almasb.fxgl.ui.FXGLButton;
 import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -21,6 +25,7 @@ import javafx.util.Duration;
 import java.util.*;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+
 
 public class PlatformerApp extends GameApplication {
 
@@ -152,77 +157,58 @@ public class PlatformerApp extends GameApplication {
     protected void initPhysics() {
         getPhysicsWorld().setGravity(0, 700);
 
-        // set collision rule for player and fruit
-        onCollision(EntityType.PLAYER, EntityType.FRUIT, (player, fruit) -> {
-            var fruitCollected = getWorldProperties().intProperty("Fruit Collected");
-            inc("Fruit Collected", +1);
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.FRUIT) {
+            @Override
+            protected void onCollision(Entity player, Entity fruit) {
 
-            if (fruitCollected.intValue() >= 100) { //if amount of fruits collected is 100 set it to 0 and add a life
-                fruitCollected.set(0);
+                var fruitCollected = getWorldProperties().intProperty("Fruit Collected");
+                inc("Fruit Collected", +1);
 
-                var lives = getWorldProperties().intProperty("Lives");
+                if (fruitCollected.intValue() >= 100) { //if amount of fruits collected is 100 set it to 0 and add a life
+                    fruitCollected.set(0);
 
-                if (lives.intValue() < initialAmountLives) { // check if replacing already existing UINode or adding one
-                    inc("Lives", +1); // increment amount of lives by one
-                    var heartTexture = getAssetLoader().loadTexture("Items/Other/Heart (64x64).png");
+                    var lives = getWorldProperties().intProperty("Lives");
 
-                    heartTexture.setTranslateX(UINodes.get(lives.get() - 1).getTranslateX()); // set location of new UINode as the location of node it is replacing
+                    if (lives.intValue() < initialAmountLives) { // check if replacing already existing UINode or adding one
+                        inc("Lives", +1); // increment amount of lives by one
+                        var heartTexture = getAssetLoader().loadTexture("Items/Other/Heart (64x64).png");
 
-                    getGameScene().clearUINodes(); // clear all UINodes
+                        heartTexture.setTranslateX(UINodes.get(lives.get() - 1).getTranslateX()); // set location of new UINode as the location of node it is replacing
 
-                    UINodes.set(lives.get() - 1,heartTexture); // replace old node with new one on same index in global ArrayList UINodes
+                        getGameScene().clearUINodes(); // clear all UINodes
 
-                    for (Node n : UINodes) //add all nodes from global Arraylist UINodes to gamescene
-                        getGameScene().addUINode(n);
+                        UINodes.set(lives.get() - 1,heartTexture); // replace old node with new one on same index in global ArrayList UINodes
 
-                } else {
-                    inc("Lives", +1);
-                    int amountOfExtraLives = lives.get() - initialAmountLives;
-                    var blueHeartTexture = getAssetLoader().loadTexture("Items/Other/Heart Blue (64x64).png");
+                        for (Node n : UINodes) //add all nodes from global Arraylist UINodes to gamescene
+                            getGameScene().addUINode(n);
 
-                    blueHeartTexture.setTranslateX(UINodes.get(initialAmountLives - 1).getTranslateX() + (66 * amountOfExtraLives)); // set location of new UINode
+                    } else {
+                        inc("Lives", +1);
+                        int amountOfExtraLives = lives.get() - initialAmountLives;
+                        var blueHeartTexture = getAssetLoader().loadTexture("Items/Other/Heart Blue (64x64).png");
 
-                    UINodes.add(blueHeartTexture); // add extra heart to global Arraylist UINodes
+                        blueHeartTexture.setTranslateX(UINodes.get(initialAmountLives - 1).getTranslateX() + (66 * amountOfExtraLives)); // set location of new UINode
 
-                    getGameScene().clearUINodes(); // clear all UINodes
+                        UINodes.add(blueHeartTexture); // add extra heart to global Arraylist UINodes
 
-                    for (Node n : UINodes) //add all nodes from global Arraylist UINodes to gamescene
-                        getGameScene().addUINode(n);
+                        getGameScene().clearUINodes(); // clear all UINodes
+
+                        for (Node n : UINodes) // add all nodes from global Arraylist UINodes to gamescene
+                            getGameScene().addUINode(n);
+                    }
                 }
+                fruit.removeFromWorld(); // delete touched fruit
             }
-            fruit.removeFromWorld(); //delete touched fruit
         });
 
-        //set collision rule for player and powerupbox
-        onCollision(EntityType.PLAYER, EntityType.POWERUPBOX, (player, powerupbox) -> {
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.POWERUPBOX) {
+            @Override
+            protected void onHitBoxTrigger(Entity player, Entity powerupbox, HitBox playerBox, HitBox powerupBox) {
+                if (player.getBoundingBoxComponent().hitBoxesProperty().get(0) != playerBox) //check whether the top hitbox of the player hit the powerbox; if not, do nothing
+                    return;
 
-            //generate a random sequence with arrow keys
-            ArrayList<KeyCode> sequence = new ArrayList<>();
-            Random rand = new Random();
-            List<KeyCode> inputList = Arrays.asList(KeyCode.UP, KeyCode.DOWN, KeyCode.RIGHT, KeyCode.LEFT);
-
-            int numberOfElements = 8;
-
-            for (int i = 0; i < numberOfElements; i++) {
-                int randomIndex = rand.nextInt(inputList.size());
-                sequence.add(inputList.get(randomIndex));
+                powerupbox.getComponent(PowerupboxComponent.class).hit(powerupbox, player);
             }
-
-            //play triggersequence minigame with generated sequence
-            getMiniGameService().startTriggerSequence(sequence, result -> {
-                PowerupType pt;
-                String message;
-                if (result.isSuccess()) {
-                    pt = PowerupType.SHOOT;
-                    message = "Press \"z\" to shoot!";
-                } else {
-                    pt = PowerupType.STOMP;
-                    message = "Press down to slam down with force!";
-                }
-                player.getComponent(PlayerComponent.class).addPowerup(pt);
-                getNotificationService().pushNotification(message);
-            });
-            powerupbox.removeFromWorld(); //delete touched powerupbox
         });
 
         //set collision rule player and goal
@@ -260,7 +246,7 @@ public class PlatformerApp extends GameApplication {
 
         if (player != null) {
             if (getWorldProperties().intProperty("Lives").isNotEqualTo(0).get()) //check whether player has lives left
-                player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(30, 550)); //respawn player
+                player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(87, 578)); //respawn player
             else
                 getDialogService().showMessageBox("Game Over", getGameController()::exit);
         }

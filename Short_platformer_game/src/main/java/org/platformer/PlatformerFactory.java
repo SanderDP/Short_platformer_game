@@ -23,15 +23,6 @@ import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 
 public class PlatformerFactory implements EntityFactory {
 
-    @Spawns("platform")
-    public Entity newPlatform(SpawnData data) {
-        return entityBuilder(data)
-                .type(EntityType.PLATFORM)
-                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
-                .with(new PhysicsComponent())
-                .build();
-    }
-
     @Spawns("player")
     public Entity newPlayer(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
@@ -45,11 +36,22 @@ public class PlatformerFactory implements EntityFactory {
 
         return entityBuilder(data)
                 .type(EntityType.PLAYER)
-                .bbox(new HitBox(new Point2D(5,5), BoundingShape.box(23, 25)))
+                .bbox(new HitBox(new Point2D(7, 5), BoundingShape.box(19, 4))) // top hitbox of player
+                .bbox(new HitBox(new Point2D(5, 28), BoundingShape.box(23, 3))) // bottom hitbox of player
+                .bbox(new HitBox(new Point2D(5,7), BoundingShape.box(23, 23))) // general hitbox of player
+                .collidable()
                 .with(physics)
-                .with(new CollidableComponent(true))
                 .with(new IrremovableComponent())
                 .with(new PlayerComponent())
+                .build();
+    }
+
+    @Spawns("platform")
+    public Entity newPlatform(SpawnData data) {
+        return entityBuilder(data)
+                .type(EntityType.PLATFORM)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new PhysicsComponent())
                 .build();
     }
 
@@ -79,8 +81,9 @@ public class PlatformerFactory implements EntityFactory {
         return entityBuilder(data)
                 .type(EntityType.POWERUPBOX)
                 .bbox(new HitBox(new Point2D(4, 2), BoundingShape.box(20, 20)))
+                .collidable()
                 .with(new PowerupboxComponent())
-                .with(new CollidableComponent(true))
+                .with(new PhysicsComponent())
                 .build();
     }
 

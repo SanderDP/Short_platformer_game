@@ -19,7 +19,8 @@ public class PlayerComponent extends Component {
     private AnimatedTexture texture;
 
     private AnimationChannel animIdle, animWalk, animJump, animDoubleJump, animFall;
-    private int jumps = 2;
+    private int jumps;
+    private int amountOfJumps = 2;
     private ArrayList<PowerupType> powerups = new ArrayList<PowerupType>();
 
     public PlayerComponent() {
@@ -42,7 +43,7 @@ public class PlayerComponent extends Component {
 
         physics.onGroundProperty().addListener((obs, old, isOnGround) -> {
             if (isOnGround) {
-                jumps = 2;
+                jumps = amountOfJumps;
             }
         });
     }
