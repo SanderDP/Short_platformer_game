@@ -4,6 +4,11 @@
 
 - FXGL.getGameWorld().setLevel(FXGL.setLevelFromMap("tmx/platformer.tmx")); moest gewoon FXGL.setLevelFromMap("tmx/platformer.tmx") zijn
 
+- UINode only accepts node but I want to add container with 3 nodes in it
+   oplossing: gewoon 1 voor 1 toegevoegd
+
+- met gamevars dat intigers zijn niet .add(amount) of .subtract(amount) doen maar functie inc(variabele, +/-amount) [increment]
+
 - Ui compatible maken met vars.put("Lives", 3); => de Ui moet aantal harten tonen naargelang van dit nummer
     probleem: getGameScene().getUINodes().set(getWorldProperties().intProperty("Lives").get(), getAssetLoader().loadTexture("Items/Other/Heart Empty (64x64).png")); werkt niet
     reden: Abstractlist.set(int index, Node node) is niet gesupport en getGameScene.getUINodes() is een Abstractlist => UnsupportedOperationException
@@ -32,9 +37,15 @@
         - remove alle nodes van Gamescene met .clearUINodes();
         - plaats alle nodes van globale list in gameScene;
 
+- minigame:
+    de fxgl library heeft een ingebouwde minigames gedeelte met enkele voorgeprogrammeerde minigames => gewoon oproepen met minigameService().start[minigameName]([vars]);
+     -> ik maak gebruik van de "CircuitBreaker" minigame
 
+     probleem:
+        deze minigame is al voorgeprogrammeerd maar de class die de controls insteld is final en ik wil andere controls instellen
 
-- UINode only accepts node but I want to add container with 3 nodes in it
-   oplossing: gewoon 1 voor 1 toegevoegd
+        oplossing:
+            maak CustomControlCircuitBreakerView waarin ik de code van deze final class in over neem en het gedeelte waarbij de controls worden ingesteld aanpas
 
-- met gamevars dat intigers zijn niet .add(amount) of .subtract(amount) doen maar functie inc(variabele, +/-amount) [increment]
+            probleem: deze class is in kotlin geschreven
+            oplossing: vertaal van Kotlin -> Java

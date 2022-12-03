@@ -1,18 +1,11 @@
-package org.platformer;
+package org.platformer.entities;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
-import com.almasb.fxgl.minigames.circuitbreaker.CircuitBreakerView;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
-import com.almasb.fxgl.texture.Texture;
-import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import org.platformer.minigames.circuitbreaker.CustomControlCircuitBreakerView;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.fxgl.dsl.FXGL.getNotificationService;
@@ -39,18 +32,7 @@ public class PowerupboxComponent extends Component {
         texture.playAnimationChannel(animHit);
         // remove
         texture.setOnCycleFinished(() -> {
-            //generate a random sequence with arrow keys
-            ArrayList<KeyCode> sequence = new ArrayList<>();
-            Random rand = new Random();
-            List<KeyCode> inputList = Arrays.asList(KeyCode.UP, KeyCode.DOWN, KeyCode.RIGHT, KeyCode.LEFT);
-
-            int numberOfElements = 8;
-
-            for (int i = 0; i < numberOfElements; i++) {
-                int randomIndex = rand.nextInt(inputList.size());
-                sequence.add(inputList.get(randomIndex));
-            }
-            getMiniGameService().startTriggerSequence(sequence, (result) -> {
+            getMiniGameService().startMiniGame(new CustomControlCircuitBreakerView(), (result) -> {
                 PowerupType pt;
                 String message;
                 if (result.isSuccess()) {
