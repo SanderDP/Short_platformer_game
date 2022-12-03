@@ -49,3 +49,10 @@
 
             probleem: deze class is in kotlin geschreven
             oplossing: vertaal van Kotlin -> Java
+
+- enemy AI
+    dacht dat ik geen groundsensor kon gebruiken want moet checken aan beide kanten (kan maar 1 groundsesor aan een entity koppelen)
+        => maken van lists in mushroomcomponent en collisionhandlers om groundsensor te recreëren en deze 2 maal gebruiken
+
+    ONTDEKKING:
+        de "scale" parameter van een entity kan op -1 gezet worden om gans de entity te mirroren, niet enkel de sprites

@@ -11,11 +11,9 @@ import com.almasb.fxgl.entity.components.IrremovableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
-import com.almasb.fxgl.physics.SensorCollisionHandler;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.geometry.Point2D;
-import javafx.scene.effect.Light;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.platformer.entities.*;
@@ -23,9 +21,7 @@ import org.platformer.entities.components.FruitComponent;
 import org.platformer.entities.components.GoalComponent;
 import org.platformer.entities.components.PlayerComponent;
 import org.platformer.entities.components.PowerupboxComponent;
-import org.platformer.entities.components.enemycomponents.LeftGroundSensorCollisionHandler;
 import org.platformer.entities.components.enemycomponents.MushroomComponent;
-import org.platformer.entities.components.enemycomponents.RightGroundSensorCollisionHandler;
 
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
@@ -121,8 +117,10 @@ public class PlatformerFactory implements EntityFactory {
 
         MushroomComponent mushroomComponent = new MushroomComponent();
 
-        physics.addSensor(new HitBox("LEFT_GROUND_SENSOR", new Point2D(0, 32), BoundingShape.box(3, 5)), new LeftGroundSensorCollisionHandler(mushroomComponent));
-        physics.addSensor(new HitBox("RIGHT_GROUND_SENSOR", new Point2D(29, 32), BoundingShape.box(3, 5)), new RightGroundSensorCollisionHandler(mushroomComponent));
+        physics.addGroundSensor(new HitBox("LEFT_GROUND_SENSOR", new Point2D(0, 32), BoundingShape.box(3, 5)));
+
+        //physics.addSensor(new HitBox("LEFT_GROUND_SENSOR", new Point2D(0, 32), BoundingShape.box(3, 5)), new LeftGroundSensorCollisionHandler(mushroomComponent));
+        //physics.addSensor(new HitBox("RIGHT_GROUND_SENSOR", new Point2D(29, 32), BoundingShape.box(3, 5)), new RightGroundSensorCollisionHandler(mushroomComponent));
 
         return entityBuilder(data)
                 .type(EnemyType.MUSHROOM)

@@ -25,7 +25,8 @@ public class MushroomComponent extends EnemyComponent{
 
     private int movespeed;
 
-    private int scaleX = 1;
+    private int scaleX = -1; // due to the used sprites facing left, scaleX and entity.getScaleX() must always be opposite values
+                             // if the sprites where to face right, they should always have the same value
 
     public MushroomComponent() {
         animIdle = new AnimationChannel(image("Enemies/Mushroom/Idle (32x32).png"), 14, 32, 32, Duration.seconds(3), 0, 13);
@@ -45,24 +46,18 @@ public class MushroomComponent extends EnemyComponent{
 
         physics.setOnPhysicsInitialized(this::moving);
 
-        hasGroundLeftProperty().addListener((obs, old, hasGroundLeft) -> {
-            if (!hasGroundLeft) {
-                scaleX = 1; // entity.getScaleX() geeft hier een error => global variable scaleX gebruiken
-            }
-        });
-
-        hasGroundRightProperty().addListener((obs, old, hasGroundRight) -> {
-            if (!hasGroundRight) {
-                scaleX = -1;
+        physics.onGroundProperty().addListener((obs, old, thereIsGround) -> {
+            if (!thereIsGround) {
+                scaleX *= -1; // entity.getScaleX() geeft hier een error => global variable scaleX gebruiken
             }
         });
     }
 
     @Override
     public void onUpdate(double tpf) {
-        /*if (scaleX != entity.getScaleX()) {
-            entity.setScaleX(scaleX);
-        } todo: fix animation so that sprite faces other way without glitching*/
+        if (scaleX == entity.getScaleX()) { // make sure getScaleX() is opposite to scaleX
+            entity.setScaleX(scaleX * -1);
+        }
         if (physics.isMovingX()) {
             if (texture.getAnimationChannel() != animRun) {
                 texture.loopAnimationChannel(animRun);
