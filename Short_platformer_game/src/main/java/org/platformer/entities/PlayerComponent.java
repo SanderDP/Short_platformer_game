@@ -1,6 +1,7 @@
 package org.platformer.entities;
 
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
@@ -10,7 +11,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 
-import static com.almasb.fxgl.dsl.FXGL.image;
+import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class PlayerComponent extends Component {
 
@@ -18,7 +19,7 @@ public class PlayerComponent extends Component {
 
     private AnimatedTexture texture;
 
-    private AnimationChannel animIdle, animWalk, animJump, animDoubleJump, animFall;
+    private AnimationChannel animIdle, animWalk, animJump, animDoubleJump, animFall, animDied, animSpawn, animHit;
     private int jumps;
     private int amountOfJumps = 2;
     private ArrayList<PowerupType> powerups = new ArrayList<PowerupType>();
@@ -28,7 +29,10 @@ public class PlayerComponent extends Component {
         animWalk = new AnimationChannel(image("Virtual Guy/Run (32x32).png"), 12, 32, 32, Duration.seconds(1), 0, 11);
         animJump = new AnimationChannel(image("Virtual Guy/Jump (32x32).png"), 1, 32, 32, Duration.seconds(1), 0, 0);
         animDoubleJump = new AnimationChannel(image("Virtual Guy/Double Jump (32x32).png"), 6, 32, 32, Duration.seconds(0.50), 0, 5);
-        animFall= new AnimationChannel(image("Virtual Guy/Fall (32x32).png"), 1, 32, 32, Duration.seconds(1), 0, 0);
+        animFall = new AnimationChannel(image("Virtual Guy/Fall (32x32).png"), 1, 32, 32, Duration.seconds(1), 0, 0);
+        animDied = new AnimationChannel(image("Virtual Guy/Disappearing (32x32).png"), 7, 32, 32, Duration.seconds(1), 0, 6);
+        animSpawn = new AnimationChannel(image("Virtual Guy/Appearing (32x32).png"), 7, 32, 32, Duration.seconds(1), 0, 6);
+        animHit = new AnimationChannel(image("Virtual Guy/Hit (32x32).png"), 7, 32, 32, Duration.seconds(1), 0, 6);
 
         texture = new AnimatedTexture(animIdle);
         texture.loop();
@@ -38,7 +42,7 @@ public class PlayerComponent extends Component {
 
     @Override
     public void onAdded() {
-        entity.getTransformComponent().setScaleOrigin(new Point2D(16, 21));
+        entity.getTransformComponent().setScaleOrigin(new Point2D(16, 16));
         entity.getViewComponent().addChild(texture);
 
         physics.onGroundProperty().addListener((obs, old, isOnGround) -> {
@@ -50,19 +54,20 @@ public class PlayerComponent extends Component {
 
     @Override
     public void onUpdate(double tpf) {
-        if (physics.isOnGround()) {
-            if (physics.isMovingX()) {
-                if (texture.getAnimationChannel() != animWalk) {
-                    texture.loopAnimationChannel(animWalk);
-                }
-            } else if (texture.getAnimationChannel() != animIdle) {
+        if (texture.getAnimationChannel() != animSpawn && texture.getAnimationChannel() != animDied) {
+            if (physics.isOnGround()) {
+                if (physics.isMovingX()) {
+                    if (texture.getAnimationChannel() != animWalk) {
+                        texture.loopAnimationChannel(animWalk);
+                    }
+                } else if (texture.getAnimationChannel() != animIdle) {
                     texture.loopAnimationChannel(animIdle);
                 }
+            } else if (physics.getVelocityY() > 0) {
+                texture.loopAnimationChannel(animFall);
+            } else if (physics.getVelocityY() <= 0 && texture.getAnimationChannel() != animDoubleJump) {
+                texture.loopAnimationChannel(animJump);
             }
-        else if (physics.getVelocityY() > 0) {
-            texture.loopAnimationChannel(animFall);
-        } else if (physics.getVelocityY() <= 0 && texture.getAnimationChannel() != animDoubleJump){
-            texture.loopAnimationChannel(animJump);
         }
     }
 
@@ -116,5 +121,29 @@ public class PlayerComponent extends Component {
         if (!powerups.contains(powerupType)) {
             powerups.add(powerupType);
         }
+    }
+
+    public void died() {
+        getInput().clearAll();
+        texture.playAnimationChannel(animDied);
+
+        texture.setOnCycleFinished(() -> {
+            getDialogService().showMessageBox("Game Over", getGameController()::exit);
+        });
+    }
+
+    public void hit() {
+        texture.playAnimationChannel(animHit);
+
+       // physics.setVelocityY(500);
+       // physics.setVelocityX(-100);
+    }
+
+    public void spawn() {
+        texture.playAnimationChannel(animSpawn);
+
+        texture.setOnCycleFinished(() -> {
+            texture.loopAnimationChannel(animIdle);
+        });
     }
 }

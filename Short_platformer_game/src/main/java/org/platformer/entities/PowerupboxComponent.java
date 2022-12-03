@@ -28,9 +28,8 @@ public class PowerupboxComponent extends Component {
         entity.getViewComponent().addChild(texture);
     }
 
-    public void hit(Entity powerupbox, Entity player) {
+    public void hit(Entity player) {
         texture.playAnimationChannel(animHit);
-        // remove
         texture.setOnCycleFinished(() -> {
             getMiniGameService().startMiniGame(new CustomControlCircuitBreakerView(), (result) -> {
                 PowerupType pt;
@@ -45,7 +44,7 @@ public class PowerupboxComponent extends Component {
                 player.getComponent(PlayerComponent.class).addPowerup(pt);
                 getNotificationService().pushNotification(message);
             });
-            powerupbox.removeFromWorld(); // remove the powerbox from the world
+            entity.removeFromWorld(); // remove the powerbox from the world
         });
     }
 }

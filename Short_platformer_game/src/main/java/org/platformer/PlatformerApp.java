@@ -100,8 +100,9 @@ public class PlatformerApp extends GameApplication {
     int initialAmountLives = 5;
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        vars.put("Fruit Collected", 98);
+        vars.put("Fruit Collected", 98); //todo: set to 0
         vars.put("Lives", initialAmountLives);
+        vars.put("Spawnpoint", new Point2D(87, 578));
     }
 
     @Override
@@ -140,7 +141,8 @@ public class PlatformerApp extends GameApplication {
         getGameWorld().addEntityFactory(new PlatformerFactory());
         setLevelFromMap("tmx/platformer.tmx");
 
-        player = spawn("player", 87, 578);
+        Point2D spawnpoint = getWorldProperties().getValue("Spawnpoint");
+        player = spawn("player", spawnpoint.getX(), spawnpoint.getY());
 
         getGameScene().setBackgroundRepeat("Background/Blue.png");
 
@@ -204,7 +206,7 @@ public class PlatformerApp extends GameApplication {
                 if (player.getBoundingBoxComponent().hitBoxesProperty().get(0) != playerBox) //check whether the top hitbox of the player hit the powerbox; if not, do nothing
                     return;
 
-                powerupbox.getComponent(PowerupboxComponent.class).hit(powerupbox, player);
+                powerupbox.getComponent(PowerupboxComponent.class).hit(player);
             }
         });
 
@@ -217,11 +219,25 @@ public class PlatformerApp extends GameApplication {
     @Override
     protected void onUpdate(double tpf) {
         if (player.getY() > getAppHeight()) {
-            onPlayerDied();
+            player.getComponent(PhysicsComponent.class).overwritePosition(getWorldProperties().getValue("Spawnpoint")); //respawn player
+            player.getComponent(PlayerComponent.class).spawn();
+            lostALife();
         }
     }
 
-    private void onPlayerDied() {
+    private void onPlayerHit() {
+        lostALife();
+
+        if (player != null) {
+            if (getWorldProperties().intProperty("Lives").isNotEqualTo(0).get()) //check whether player has lives left
+                player.getComponent(PlayerComponent.class).hit();
+            else{
+                player.getComponent(PlayerComponent.class).died();
+            }
+        }
+    }
+
+    private void lostALife() {
         var lives = getWorldProperties().intProperty("Lives");
 
         if (lives.get() > initialAmountLives) { // check if player has blue hearts
@@ -242,10 +258,9 @@ public class PlatformerApp extends GameApplication {
         inc("Lives", -1); //decrease the amount of lives the player has by one
 
         if (player != null) {
-            if (getWorldProperties().intProperty("Lives").isNotEqualTo(0).get()) //check whether player has lives left
-                player.getComponent(PhysicsComponent.class).overwritePosition(new Point2D(87, 578)); //respawn player
-            else
-                getDialogService().showMessageBox("Game Over", getGameController()::exit);
+            if (getWorldProperties().intProperty("Lives").isEqualTo(0).get()) { //check whether player has lives left
+                player.getComponent(PlayerComponent.class).died();
+            }
         }
     }
 
