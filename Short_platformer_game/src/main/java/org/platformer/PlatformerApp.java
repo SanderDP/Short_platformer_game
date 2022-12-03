@@ -16,8 +16,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.platformer.entities.EntityType;
-import org.platformer.entities.PlayerComponent;
-import org.platformer.entities.PowerupboxComponent;
+import org.platformer.entities.components.PlayerComponent;
+import org.platformer.entities.components.PowerupboxComponent;
 
 import java.util.*;
 

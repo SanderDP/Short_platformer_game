@@ -1,10 +1,11 @@
-package org.platformer.entities;
+package org.platformer.entities.components;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.util.Duration;
+import org.platformer.entities.PowerupType;
 import org.platformer.minigames.circuitbreaker.CustomControlCircuitBreakerView;
 
 import static com.almasb.fxgl.dsl.FXGL.*;

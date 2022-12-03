@@ -11,12 +11,21 @@ import com.almasb.fxgl.entity.components.IrremovableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
+import com.almasb.fxgl.physics.SensorCollisionHandler;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.geometry.Point2D;
+import javafx.scene.effect.Light;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.platformer.entities.*;
+import org.platformer.entities.components.FruitComponent;
+import org.platformer.entities.components.GoalComponent;
+import org.platformer.entities.components.PlayerComponent;
+import org.platformer.entities.components.PowerupboxComponent;
+import org.platformer.entities.components.enemycomponents.LeftGroundSensorCollisionHandler;
+import org.platformer.entities.components.enemycomponents.MushroomComponent;
+import org.platformer.entities.components.enemycomponents.RightGroundSensorCollisionHandler;
 
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
@@ -77,7 +86,6 @@ public class PlatformerFactory implements EntityFactory {
 
     @Spawns("powerupbox")
     public Entity newPowerupbox(SpawnData data) {
-        //HitBox bottomHitbox = new HitBox(new Point2D(4, 22), BoundingShape.box(20, 2));
         return entityBuilder(data)
                 .type(EntityType.POWERUPBOX)
                 .bbox(new HitBox(new Point2D(4, 2), BoundingShape.box(20, 20)))
@@ -103,6 +111,26 @@ public class PlatformerFactory implements EntityFactory {
                 .with(new ProjectileComponent(direction, 1000))
                 .with(new OffscreenCleanComponent())
                 .with(new CollidableComponent(true))
+                .build();
+    }
+
+    @Spawns("mushroom")
+    public Entity newMushroom(SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.DYNAMIC);
+
+        MushroomComponent mushroomComponent = new MushroomComponent();
+
+        physics.addSensor(new HitBox("LEFT_GROUND_SENSOR", new Point2D(0, 32), BoundingShape.box(3, 5)), new LeftGroundSensorCollisionHandler(mushroomComponent));
+        physics.addSensor(new HitBox("RIGHT_GROUND_SENSOR", new Point2D(29, 32), BoundingShape.box(3, 5)), new RightGroundSensorCollisionHandler(mushroomComponent));
+
+        return entityBuilder(data)
+                .type(EnemyType.MUSHROOM)
+                //.bbox(new HitBox(new Point2D(0, 0), BoundingShape.box(32, 32))) // top hitbox of mushroom
+                .bbox(new HitBox(new Point2D(3,12), BoundingShape.box(26, 20))) // general hitbox mushroom
+                .collidable()
+                .with(physics)
+                .with(mushroomComponent)
                 .build();
     }
 }

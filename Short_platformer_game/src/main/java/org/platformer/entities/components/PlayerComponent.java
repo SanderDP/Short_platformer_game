@@ -1,4 +1,4 @@
-package org.platformer.entities;
+package org.platformer.entities.components;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
@@ -8,6 +8,7 @@ import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
+import org.platformer.entities.PowerupType;
 
 import java.util.ArrayList;
 

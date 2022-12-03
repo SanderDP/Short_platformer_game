@@ -1,4 +1,4 @@
-package org.platformer.entities;
+package org.platformer.entities.components;
 
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.texture.AnimatedTexture;
