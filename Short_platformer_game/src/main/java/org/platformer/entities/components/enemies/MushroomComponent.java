@@ -14,7 +14,7 @@ public class MushroomComponent extends EnemyComponent{
     public MushroomComponent() {
         setAnimIdle(new AnimationChannel(image("Enemies/Mushroom/Idle (32x32).png"), 14, 32, 32, Duration.seconds(14/10), 0, 13));
         setAnimRun(new AnimationChannel(image("Enemies/Mushroom/Run (32x32).png"), 16, 32, 32, Duration.seconds(16/10), 0, 15));
-        setAnimHit(new AnimationChannel(image("Enemies/Mushroom/Hit.png"), 5, 32, 32, Duration.seconds(1), 0, 4));
+        setAnimHit(new AnimationChannel(image("Enemies/Mushroom/Hit.png"), 5, 32, 32, Duration.seconds(0.3), 0, 4));
 
         setTexture(new AnimatedTexture(getAnimIdle()));
         getTexture().loop();
@@ -48,12 +48,15 @@ public class MushroomComponent extends EnemyComponent{
             noGroundFlag = false;
         }
 
-        if (getPhysics().isMovingX()) {
-            if (getTexture().getAnimationChannel() != getAnimRun()) {
-                getTexture().loopAnimationChannel(getAnimRun());
+        if (getTexture().getAnimationChannel() != getAnimHit()) {
+            if (getPhysics().isMovingX()) {
+                if (getTexture().getAnimationChannel() != getAnimRun()) {
+                    getTexture().loopAnimationChannel(getAnimRun());
+                }
             }
         }
-        getPhysics().setVelocityX(getMovespeed() * entity.getScaleX());
+
+        moving();
     }
 
     @Override

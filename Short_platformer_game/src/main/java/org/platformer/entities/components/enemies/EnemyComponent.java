@@ -1,6 +1,7 @@
 package org.platformer.entities.components.enemies;
 
 import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
@@ -24,7 +25,14 @@ public abstract class EnemyComponent extends Component {
     public abstract void moving();
 
     public void hit() {
+        if (getTexture().getAnimationChannel() == getAnimHit())
+            return;
+
         getTexture().playAnimationChannel(getAnimHit());
+
+        //todo: make entity untouchable / set collision off
+        //entity.getComponent(CollidableComponent.class).setValue(false); doesn't seem to work
+        //entity.getBoundingBoxComponent().clearHitBoxes(); also doesn't do it either
 
         getTexture().setOnCycleFinished(() -> {
             entity.removeFromWorld();

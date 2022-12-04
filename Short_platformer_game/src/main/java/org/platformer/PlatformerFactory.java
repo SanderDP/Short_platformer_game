@@ -47,7 +47,7 @@ public class PlatformerFactory implements EntityFactory {
 
         return entityBuilder(data)
                 .type(EntityType.PLAYER)
-                .bbox(new HitBox(new Point2D(5,7), BoundingShape.box(23, 23))) // general hitbox of player
+                .bbox(new HitBox("HITBOX",new Point2D(5,7), BoundingShape.box(23, 23))) // general hitbox of player
                 .collidable()
                 .with(physics)
                 .with(playerComponent)
@@ -88,7 +88,7 @@ public class PlatformerFactory implements EntityFactory {
     public Entity newPowerupbox(SpawnData data) {
         return entityBuilder(data)
                 .type(EntityType.POWERUPBOX)
-                .bbox(new HitBox(new Point2D(4, 2), BoundingShape.box(20, 20)))
+                .bbox(new HitBox("HITBOX", new Point2D(4, 2), BoundingShape.box(20, 20)))
                 .collidable()
                 .with(new PowerupboxComponent())
                 .with(new PhysicsComponent())
@@ -126,8 +126,7 @@ public class PlatformerFactory implements EntityFactory {
 
         return entityBuilder(data)
                 .type(EnemyType.MUSHROOM)
-                //.bbox(new HitBox(new Point2D(0, 0), BoundingShape.box(32, 32))) // top hitbox of mushroom
-                .bbox(new HitBox(new Point2D(3,12), BoundingShape.box(26, 20))) // general hitbox mushroom
+                .bbox(new HitBox("HITBOX", new Point2D(3,12), BoundingShape.box(26, 20))) // general hitbox mushroom
                 .collidable()
                 .with(physics)
                 .with(mushroomComponent)

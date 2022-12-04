@@ -3,6 +3,8 @@ package org.platformer.entities.components.player;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.SensorCollisionHandler;
 import org.platformer.entities.EnemyType;
+import org.platformer.entities.components.enemies.EnemyComponent;
+import org.platformer.entities.components.enemies.MushroomComponent;
 
 public class PlayerBottomSensorCollisionHandler extends SensorCollisionHandler {
 
@@ -14,7 +16,9 @@ public class PlayerBottomSensorCollisionHandler extends SensorCollisionHandler {
 
     @Override
     protected void onCollisionBegin(Entity other) {
-        if (other.getType() == EnemyType.MUSHROOM)
-            System.out.println("hit mushroom on head");
+        if (other.getType() == EnemyType.MUSHROOM) {
+            other.getComponent(MushroomComponent.class).hit();
+            playerComponent.jump();
+        }
     }
 }
