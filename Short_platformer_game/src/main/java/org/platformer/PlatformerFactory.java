@@ -13,6 +13,7 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -61,6 +62,7 @@ public class PlatformerFactory implements EntityFactory {
                 .type(EntityType.PLATFORM)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
+                .collidable()
                 .build();
     }
 
@@ -110,7 +112,7 @@ public class PlatformerFactory implements EntityFactory {
                 .viewWithBBox(new Rectangle(10, 2, Color.BLACK))
                 .with(new ProjectileComponent(direction, 1000))
                 .with(new OffscreenCleanComponent())
-                .with(new CollidableComponent(true))
+                .collidable()
                 .build();
     }
 

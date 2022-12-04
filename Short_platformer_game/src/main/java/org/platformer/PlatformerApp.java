@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.platformer.entities.EnemyType;
 import org.platformer.entities.EntityType;
+import org.platformer.entities.components.collisions.BulletPlatformCollisionHandler;
 import org.platformer.entities.components.enemies.MushroomComponent;
 import org.platformer.entities.components.player.PlayerComponent;
 
@@ -213,6 +214,8 @@ public class PlatformerApp extends GameApplication {
                     onPlayerHit();
             }
         });
+
+        getPhysicsWorld().addCollisionHandler(new BulletPlatformCollisionHandler());
     }
 
     @Override
