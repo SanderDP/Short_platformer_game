@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.platformer.entities.EnemyType;
 import org.platformer.entities.EntityType;
+import org.platformer.entities.components.CheckpointComponent;
 import org.platformer.entities.components.collisions.BulletMushroomCollisionHandler;
 import org.platformer.entities.components.collisions.BulletPlatformCollisionHandler;
 import org.platformer.entities.components.collisions.BulletPowerupBoxCollisionHandler;
@@ -150,7 +151,7 @@ public class PlatformerApp extends GameApplication {
         getGameScene().setBackgroundRepeat("Background/Blue.png");
 
         Viewport viewport = getGameScene().getViewport();
-        viewport.setBounds(0, 0, getAppWidth(), getAppHeight() );
+        viewport.setBounds(0, 0, 500 * 16, 40 * 16);
         viewport.setZoom(2);
         viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
     }
@@ -206,6 +207,12 @@ public class PlatformerApp extends GameApplication {
         //set collision rule player and goal
         onCollisionOneTimeOnly(EntityType.PLAYER, EntityType.GOAL, (player, goal) -> {
             getDialogService().showMessageBox("You win!", getGameController()::exit); //show complete level and exit the game
+        });
+
+        //set collision rule player and checkpoint
+        onCollisionOneTimeOnly(EntityType.PLAYER, EntityType.CHECKPOINT, (player, checkpoint) -> {
+            getWorldProperties().setValue("Spawnpoint", checkpoint.getCenter());
+            checkpoint.getComponent(CheckpointComponent.class).setChecked(true);
         });
 
         //set collision rule player and mushroom enemy

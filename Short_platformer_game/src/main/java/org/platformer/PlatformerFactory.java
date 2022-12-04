@@ -18,6 +18,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.platformer.entities.*;
+import org.platformer.entities.components.CheckpointComponent;
 import org.platformer.entities.components.FruitComponent;
 import org.platformer.entities.components.GoalComponent;
 import org.platformer.entities.components.player.PlayerBottomSensorCollisionHandler;
@@ -66,13 +67,23 @@ public class PlatformerFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("checkpoint")
+    public Entity newCheckpoint(SpawnData data) {
+        return entityBuilder(data)
+                .type(EntityType.CHECKPOINT)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CheckpointComponent())
+                .collidable()
+                .build();
+    }
+
     @Spawns("goal")
     public Entity newGoal(SpawnData data) {
         return entityBuilder(data)
                 .type(EntityType.GOAL)
                 .bbox(new HitBox(new Point2D(9, 20), BoundingShape.box(46, 44)))
                 .with(new GoalComponent())
-                .with(new CollidableComponent(true))
+                .collidable()
                 .build();
     }
 
@@ -82,7 +93,7 @@ public class PlatformerFactory implements EntityFactory {
                 .type(EntityType.FRUIT)
                 .bbox(new HitBox(new Point2D(data.<Integer>get("width") / 2, data.<Integer>get("width") / 2), BoundingShape.circle(data.<Integer>get("width") / 2)))
                 .with(new FruitComponent())
-                .with(new CollidableComponent(true))
+                .collidable()
                 .build();
     }
 

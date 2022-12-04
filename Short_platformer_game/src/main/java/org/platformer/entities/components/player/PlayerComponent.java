@@ -112,8 +112,8 @@ public class PlayerComponent extends Component {
     }
 
     public void shoot() {
-        /*if (!powerups.contains(PowerupType.SHOOT))
-            return;*/
+        if (!powerups.contains(PowerupType.SHOOT))
+            return;
 
         FXGL.spawn("bullet", entity.getCenter());
     }
