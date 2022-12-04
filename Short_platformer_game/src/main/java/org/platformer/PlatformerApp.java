@@ -20,7 +20,7 @@ import org.platformer.entities.components.CheckpointComponent;
 import org.platformer.entities.components.collisions.BulletMushroomCollisionHandler;
 import org.platformer.entities.components.collisions.BulletPlatformCollisionHandler;
 import org.platformer.entities.components.collisions.BulletPowerupBoxCollisionHandler;
-import org.platformer.entities.components.enemies.MushroomComponent;
+import org.platformer.entities.components.enemies.MushMushCollisionHandler;
 import org.platformer.entities.components.player.PlayerComponent;
 
 import java.util.*;
@@ -227,6 +227,7 @@ public class PlatformerApp extends GameApplication {
         getPhysicsWorld().addCollisionHandler(new BulletPlatformCollisionHandler());
         getPhysicsWorld().addCollisionHandler(new BulletPowerupBoxCollisionHandler());
         getPhysicsWorld().addCollisionHandler(new BulletMushroomCollisionHandler());
+        getPhysicsWorld().addCollisionHandler(new MushMushCollisionHandler());
     }
 
     @Override
