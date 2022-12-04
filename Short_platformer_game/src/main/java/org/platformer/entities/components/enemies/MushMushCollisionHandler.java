@@ -19,7 +19,7 @@ public class MushMushCollisionHandler extends CollisionHandler {
         mush1.getComponent(MushroomComponent.class).pause();
         mush2.getComponent(MushroomComponent.class).setPlatformInWayFlag(true);
 
-        mush2.getComponent(MushroomComponent.class).pause();
+        mush1.getComponent(MushroomComponent.class).pause();
         mush2.getComponent(MushroomComponent.class).setPlatformInWayFlag(true);
 
         FXGL.getGameTimer().runOnceAfter(() -> {
