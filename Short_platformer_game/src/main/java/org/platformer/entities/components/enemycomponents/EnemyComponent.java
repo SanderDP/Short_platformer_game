@@ -20,41 +20,72 @@ public abstract class EnemyComponent extends Component {
     private AnimationChannel animIdle, animRun, animHit;
 
     private int movespeed;
-    private List<Entity> leftGroundList = new ArrayList<>();
-    private List<Entity> rightGroundList = new ArrayList<>();
 
-    private ReadOnlyBooleanWrapper hasGroundLeftProperty = new ReadOnlyBooleanWrapper(false);
-    private ReadOnlyBooleanWrapper hasGroundRightProperty = new ReadOnlyBooleanWrapper(false);
+    private boolean platformInWayFlag;
 
-    public abstract void stop();
+    public void stop() {
+        getPhysics().setVelocityX(0);
+    };
+
     public abstract void moving();
-    public abstract void hit();
 
-    public List<Entity> getLeftGroundList() {
-        return leftGroundList;
+    public void hit() {
+        getTexture().playAnimationChannel(getAnimHit());
+
+        getTexture().setOnCycleFinished(() -> {
+            entity.removeFromWorld();
+        });
+    };
+
+    public PhysicsComponent getPhysics() {
+        return physics;
     }
 
-    public List<Entity> getRightGroundList() {
-        return rightGroundList;
+    public AnimatedTexture getTexture() {
+        return texture;
     }
 
-    public boolean hasGroundLeft() {return !leftGroundList.isEmpty();}
-
-    public boolean hasGroundRight() {return !rightGroundList.isEmpty();}
-
-    public void setHasGroundLeft(Boolean hasGroundLeft) {
-        this.hasGroundLeftProperty.setValue(hasGroundLeft);
+    public void setTexture(AnimatedTexture texture) {
+        this.texture = texture;
     }
 
-    public void setHasGroundRight(Boolean hasGroundRight) {
-        this.hasGroundRightProperty.setValue(hasGroundRight());
+    public AnimationChannel getAnimIdle() {
+        return animIdle;
     }
 
-    public ReadOnlyBooleanProperty hasGroundLeftProperty() {
-        return hasGroundLeftProperty.getReadOnlyProperty();
+    public void setAnimIdle(AnimationChannel animIdle) {
+        this.animIdle = animIdle;
     }
 
-    public ReadOnlyBooleanProperty hasGroundRightProperty() {
-        return hasGroundRightProperty.getReadOnlyProperty();
+    public AnimationChannel getAnimRun() {
+        return animRun;
+    }
+
+    public void setAnimRun(AnimationChannel animRun) {
+        this.animRun = animRun;
+    }
+
+    public AnimationChannel getAnimHit() {
+        return animHit;
+    }
+
+    public void setAnimHit(AnimationChannel animHit) {
+        this.animHit = animHit;
+    }
+
+    public int getMovespeed() {
+        return movespeed;
+    }
+
+    public void setMovespeed(int movespeed) {
+        this.movespeed = movespeed;
+    }
+
+    public void setPlatformInWayFlag(boolean platformInWayFlag) {
+        this.platformInWayFlag = platformInWayFlag;
+    }
+
+    public boolean isPlatformInWayFlag() {
+        return platformInWayFlag;
     }
 }

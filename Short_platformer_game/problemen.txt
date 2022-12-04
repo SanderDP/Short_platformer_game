@@ -56,3 +56,4 @@
 
     ONTDEKKING:
         de "scale" parameter van een entity kan op -1 gezet worden om gans de entity te mirroren, niet enkel de sprites
+            => groundsensor gebruikt om te checken of er ground is in de volgende tile

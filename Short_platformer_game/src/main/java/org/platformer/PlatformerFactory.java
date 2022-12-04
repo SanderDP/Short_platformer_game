@@ -21,6 +21,7 @@ import org.platformer.entities.components.FruitComponent;
 import org.platformer.entities.components.GoalComponent;
 import org.platformer.entities.components.PlayerComponent;
 import org.platformer.entities.components.PowerupboxComponent;
+import org.platformer.entities.components.enemycomponents.EnemyPlatformSensorCollisionHandler;
 import org.platformer.entities.components.enemycomponents.MushroomComponent;
 
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
@@ -117,10 +118,8 @@ public class PlatformerFactory implements EntityFactory {
 
         MushroomComponent mushroomComponent = new MushroomComponent();
 
-        physics.addGroundSensor(new HitBox("LEFT_GROUND_SENSOR", new Point2D(0, 32), BoundingShape.box(3, 5)));
-
-        //physics.addSensor(new HitBox("LEFT_GROUND_SENSOR", new Point2D(0, 32), BoundingShape.box(3, 5)), new LeftGroundSensorCollisionHandler(mushroomComponent));
-        //physics.addSensor(new HitBox("RIGHT_GROUND_SENSOR", new Point2D(29, 32), BoundingShape.box(3, 5)), new RightGroundSensorCollisionHandler(mushroomComponent));
+        physics.addGroundSensor(new HitBox("RIGHT_GROUND_SENSOR", new Point2D(29, 32), BoundingShape.box(3, 5)));
+        physics.addSensor(new HitBox("RIGHT_PLATFORM_SENSOR", new Point2D(29, 12), BoundingShape.box(3, 5)), new EnemyPlatformSensorCollisionHandler(mushroomComponent));
 
         return entityBuilder(data)
                 .type(EnemyType.MUSHROOM)

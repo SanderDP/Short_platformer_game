@@ -12,76 +12,59 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.almasb.fxgl.dsl.FXGLForKtKt.image;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.text;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 
 public class MushroomComponent extends EnemyComponent{
 
-    private PhysicsComponent physics;
-
-    private AnimatedTexture texture;
-
-    private AnimationChannel animIdle, animRun, animHit;
-
-    private int movespeed;
-
-    private int scaleX = -1; // due to the used sprites facing left, scaleX and entity.getScaleX() must always be opposite values
-                             // if the sprites where to face right, they should always have the same value
+    private boolean noGroundFlag;
 
     public MushroomComponent() {
-        animIdle = new AnimationChannel(image("Enemies/Mushroom/Idle (32x32).png"), 14, 32, 32, Duration.seconds(3), 0, 13);
-        animRun = new AnimationChannel(image("Enemies/Mushroom/Run (32x32).png"), 16, 32, 32, Duration.seconds(3), 0, 15);
-        animHit = new AnimationChannel(image("Enemies/Mushroom/Hit.png"), 5, 32, 32, Duration.seconds(1), 0, 4);
+        setAnimIdle(new AnimationChannel(image("Enemies/Mushroom/Idle (32x32).png"), 14, 32, 32, Duration.seconds(3), 0, 13));
+        setAnimRun(new AnimationChannel(image("Enemies/Mushroom/Run (32x32).png"), 16, 32, 32, Duration.seconds(3), 0, 15));
+        setAnimHit(new AnimationChannel(image("Enemies/Mushroom/Hit.png"), 5, 32, 32, Duration.seconds(1), 0, 4));
 
-        texture = new AnimatedTexture(animIdle);
-        texture.loop();
+        setTexture(new AnimatedTexture(getAnimIdle()));
+        getTexture().loop();
     }
 
     @Override
     public void onAdded() {
         entity.getTransformComponent().setScaleOrigin(new Point2D(16, 16));
-        entity.getViewComponent().addChild(texture);
+        entity.getViewComponent().addChild(getTexture());
 
-        movespeed = 25;
+        setMovespeed(25);
 
-        physics.setOnPhysicsInitialized(this::moving);
+        noGroundFlag = false;
+        setPlatformInWayFlag(false);
 
-        physics.onGroundProperty().addListener((obs, old, thereIsGround) -> {
-            if (!thereIsGround) {
-                scaleX *= -1; // entity.getScaleX() geeft hier een error => global variable scaleX gebruiken
-            }
+        getPhysics().setOnPhysicsInitialized( () -> {
+            moving();
+            getPhysics().onGroundProperty().addListener((obs, old, thereIsGround) -> {
+                if (!thereIsGround) {
+                    noGroundFlag = true; // this flag is necessary as we cannot update scaleX of entity at same time as the detection and notification of collision since physicsWorld is locked
+                }
+            });
         });
     }
 
     @Override
     public void onUpdate(double tpf) {
-        if (scaleX == entity.getScaleX()) { // make sure getScaleX() is opposite to scaleX
-            entity.setScaleX(scaleX * -1);
+        if (isPlatformInWayFlag() || noGroundFlag) { //  check if onGroundPropertyListener or whether the platformsensor (EnemyPlatformSensorCollisionHandler) has fired an event
+            entity.setScaleX(entity.getScaleX() * -1); //set scaleX to it's opposite => flips whole entity along it's x-axis
+            setPlatformInWayFlag(false);
+            noGroundFlag = false;
         }
-        if (physics.isMovingX()) {
-            if (texture.getAnimationChannel() != animRun) {
-                texture.loopAnimationChannel(animRun);
+
+        if (getPhysics().isMovingX()) {
+            if (getTexture().getAnimationChannel() != getAnimRun()) {
+                getTexture().loopAnimationChannel(getAnimRun());
             }
         }
-        physics.setVelocityX(movespeed * scaleX);
-    }
-
-    @Override
-    public void stop() {
-        physics.setVelocityX(0);
+        getPhysics().setVelocityX(getMovespeed() * entity.getScaleX());
     }
 
     @Override
     public void moving() {
-        physics.setVelocityX(movespeed * scaleX);
-    }
-
-    @Override
-    public void hit() {
-        texture.playAnimationChannel(animHit);
-
-        texture.setOnCycleFinished(() -> {
-            entity.removeFromWorld();
-        });
+        getPhysics().setVelocityX(getMovespeed() * entity.getScaleX());
     }
 }
