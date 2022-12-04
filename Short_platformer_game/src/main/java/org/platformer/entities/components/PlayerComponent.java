@@ -26,11 +26,11 @@ public class PlayerComponent extends Component {
     private ArrayList<PowerupType> powerups = new ArrayList<PowerupType>();
 
     public PlayerComponent() {
-        animIdle = new AnimationChannel(image("Virtual Guy/Idle (32x32).png"), 11, 32, 32, Duration.seconds(1), 0, 10);
-        animWalk = new AnimationChannel(image("Virtual Guy/Run (32x32).png"), 12, 32, 32, Duration.seconds(1), 0, 11);
-        animJump = new AnimationChannel(image("Virtual Guy/Jump (32x32).png"), 1, 32, 32, Duration.seconds(1), 0, 0);
+        animIdle = new AnimationChannel(image("Virtual Guy/Idle (32x32).png"), 11, 32, 32, Duration.seconds(11/10), 0, 10);
+        animWalk = new AnimationChannel(image("Virtual Guy/Run (32x32).png"), 12, 32, 32, Duration.seconds(12/10), 0, 11);
+        animJump = new AnimationChannel(image("Virtual Guy/Jump (32x32).png"), 1, 32, 32, Duration.seconds(1/10), 0, 0);
         animDoubleJump = new AnimationChannel(image("Virtual Guy/Double Jump (32x32).png"), 6, 32, 32, Duration.seconds(0.50), 0, 5);
-        animFall = new AnimationChannel(image("Virtual Guy/Fall (32x32).png"), 1, 32, 32, Duration.seconds(1), 0, 0);
+        animFall = new AnimationChannel(image("Virtual Guy/Fall (32x32).png"), 1, 32, 32, Duration.seconds(1/10), 0, 0);
         animDied = new AnimationChannel(image("Virtual Guy/Disappearing (32x32).png"), 7, 32, 32, Duration.seconds(1), 0, 6);
         animSpawn = new AnimationChannel(image("Virtual Guy/Appearing (32x32).png"), 7, 32, 32, Duration.seconds(1), 0, 6);
         animHit = new AnimationChannel(image("Virtual Guy/Hit (32x32).png"), 7, 32, 32, Duration.seconds(1), 0, 6);
