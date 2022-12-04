@@ -17,9 +17,9 @@ public class MushMushCollisionHandler extends CollisionHandler {
         //problem: when two mushes collide they both activate this event so this solution only randomizes stuff
         //todo: make this actually work normally -> when colliding both should turn around
         mush1.getComponent(MushroomComponent.class).pause();
-        mush2.getComponent(MushroomComponent.class).setPlatformInWayFlag(true);
+        mush1.getComponent(MushroomComponent.class).setPlatformInWayFlag(true);
 
-        mush1.getComponent(MushroomComponent.class).pause();
+        mush2.getComponent(MushroomComponent.class).pause();
         mush2.getComponent(MushroomComponent.class).setPlatformInWayFlag(true);
 
         FXGL.getGameTimer().runOnceAfter(() -> {
