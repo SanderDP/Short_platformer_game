@@ -40,7 +40,7 @@ public class PlatformerFactory implements EntityFactory {
         //adding sensors
         physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(5, 30), BoundingShape.box(23, 5)));
         physics.addSensor(new HitBox("TOP_SENSOR", new Point2D(7, 5), BoundingShape.box(19, 4)), new PlayerTopSensorCollisionHandler(playerComponent));
-        physics.addSensor(new HitBox("BOTTOM_SENSOR", new Point2D(8,28), BoundingShape.box(17, 3)), new PlayerBottomSensorCollisionHandler(playerComponent));
+        physics.addSensor(new HitBox("BOTTOM_SENSOR", new Point2D(6,28), BoundingShape.box(20, 5)), new PlayerBottomSensorCollisionHandler(playerComponent));
 
         // this avoids player sticking to walls
         physics.setFixtureDef(new FixtureDef().friction(0.0f));

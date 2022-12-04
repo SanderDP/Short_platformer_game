@@ -23,6 +23,7 @@ public class PlayerComponent extends Component {
     private AnimationChannel animIdle, animWalk, animJump, animDoubleJump, animFall, animDied, animSpawn, animHit;
     private int jumps;
     private int amountOfJumps = 2;
+    private boolean invincible;
     private ArrayList<PowerupType> powerups = new ArrayList<PowerupType>();
 
     public PlayerComponent() {
@@ -45,6 +46,8 @@ public class PlayerComponent extends Component {
     public void onAdded() {
         entity.getTransformComponent().setScaleOrigin(new Point2D(16, 16));
         entity.getViewComponent().addChild(texture);
+
+        invincible = false;
 
         physics.onGroundProperty().addListener((obs, old, isOnGround) -> {
             if (isOnGround) {
@@ -136,6 +139,8 @@ public class PlayerComponent extends Component {
     public void hit() {
         texture.playAnimationChannel(animHit);
 
+        setInvincibleFor(3);
+
        // physics.setVelocityY(500);
        // physics.setVelocityX(-100);
     }
@@ -146,5 +151,14 @@ public class PlayerComponent extends Component {
         texture.setOnCycleFinished(() -> {
             texture.loopAnimationChannel(animIdle);
         });
+    }
+
+    public void setInvincibleFor(double seconds) {
+        invincible = true;
+        getGameTimer().runOnceAfter(() -> invincible = false, Duration.seconds(seconds));
+    }
+
+    public boolean isInvincible() {
+        return invincible;
     }
 }

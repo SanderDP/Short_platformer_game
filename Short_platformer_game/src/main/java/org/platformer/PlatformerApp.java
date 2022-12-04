@@ -7,7 +7,6 @@ import com.almasb.fxgl.app.scene.Viewport;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.Texture;
 import javafx.geometry.Point2D;
@@ -15,9 +14,10 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.platformer.entities.EnemyType;
 import org.platformer.entities.EntityType;
+import org.platformer.entities.components.enemies.MushroomComponent;
 import org.platformer.entities.components.player.PlayerComponent;
-import org.platformer.entities.components.PowerupboxComponent;
 
 import java.util.*;
 
@@ -203,6 +203,15 @@ public class PlatformerApp extends GameApplication {
         //set collision rule player and goal
         onCollisionOneTimeOnly(EntityType.PLAYER, EntityType.GOAL, (player, goal) -> {
             getDialogService().showMessageBox("You win!", getGameController()::exit); //show complete level and exit the game
+        });
+
+        //set collision rule player and mushroom enemy
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EnemyType.MUSHROOM) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity mushroom) {
+                if (!player.getComponent(PlayerComponent.class).isInvincible())
+                    onPlayerHit();
+            }
         });
     }
 
