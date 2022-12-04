@@ -1,16 +1,9 @@
-package org.platformer.entities.components.enemycomponents;
+package org.platformer.entities.components.enemies;
 
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.Preload;
-import com.almasb.fxgl.entity.component.Component;
-import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.*;
 

@@ -1,15 +1,9 @@
-package org.platformer.entities.components.enemycomponents;
+package org.platformer.entities.components.enemies;
 
-import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class EnemyComponent extends Component {
 

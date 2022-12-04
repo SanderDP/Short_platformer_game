@@ -6,6 +6,7 @@ import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.util.Duration;
 import org.platformer.entities.PowerupType;
+import org.platformer.entities.components.player.PlayerComponent;
 import org.platformer.minigames.circuitbreaker.CustomControlCircuitBreakerView;
 
 import static com.almasb.fxgl.dsl.FXGL.*;

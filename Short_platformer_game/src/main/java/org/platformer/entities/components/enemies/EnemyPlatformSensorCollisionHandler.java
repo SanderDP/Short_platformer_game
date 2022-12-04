@@ -1,4 +1,4 @@
-package org.platformer.entities.components.enemycomponents;
+package org.platformer.entities.components.enemies;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.SensorCollisionHandler;

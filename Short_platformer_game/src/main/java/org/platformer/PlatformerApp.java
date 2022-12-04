@@ -16,7 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.platformer.entities.EntityType;
-import org.platformer.entities.components.PlayerComponent;
+import org.platformer.entities.components.player.PlayerComponent;
 import org.platformer.entities.components.PowerupboxComponent;
 
 import java.util.*;
@@ -197,16 +197,6 @@ public class PlatformerApp extends GameApplication {
                     }
                 }
                 fruit.removeFromWorld(); // delete touched fruit
-            }
-        });
-
-        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.POWERUPBOX) {
-            @Override
-            protected void onHitBoxTrigger(Entity player, Entity powerupbox, HitBox playerBox, HitBox powerupBox) {
-                if (player.getBoundingBoxComponent().hitBoxesProperty().get(0) != playerBox) //check whether the top hitbox of the player hit the powerbox; if not, do nothing
-                    return;
-
-                powerupbox.getComponent(PowerupboxComponent.class).hit(player);
             }
         });
 
