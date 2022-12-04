@@ -19,14 +19,14 @@ import javafx.scene.shape.Rectangle;
 import org.platformer.entities.*;
 import org.platformer.entities.components.FruitComponent;
 import org.platformer.entities.components.GoalComponent;
+import org.platformer.entities.components.player.PlayerBottomSensorCollisionHandler;
 import org.platformer.entities.components.player.PlayerComponent;
 import org.platformer.entities.components.PowerupboxComponent;
 import org.platformer.entities.components.enemies.EnemyPlatformSensorCollisionHandler;
 import org.platformer.entities.components.enemies.MushroomComponent;
 import org.platformer.entities.components.player.PlayerTopSensorCollisionHandler;
 
-import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
-import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
+import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class PlatformerFactory implements EntityFactory {
 
@@ -40,14 +40,13 @@ public class PlatformerFactory implements EntityFactory {
         //adding sensors
         physics.addGroundSensor(new HitBox("GROUND_SENSOR", new Point2D(5, 30), BoundingShape.box(23, 5)));
         physics.addSensor(new HitBox("TOP_SENSOR", new Point2D(7, 5), BoundingShape.box(19, 4)), new PlayerTopSensorCollisionHandler(playerComponent));
+        physics.addSensor(new HitBox("BOTTOM_SENSOR", new Point2D(8,28), BoundingShape.box(17, 3)), new PlayerBottomSensorCollisionHandler(playerComponent));
 
         // this avoids player sticking to walls
         physics.setFixtureDef(new FixtureDef().friction(0.0f));
 
         return entityBuilder(data)
                 .type(EntityType.PLAYER)
-                .bbox(new HitBox(new Point2D(7, 5), BoundingShape.box(19, 4))) // top hitbox of player
-                .bbox(new HitBox(new Point2D(5, 28), BoundingShape.box(23, 3))) // bottom hitbox of player
                 .bbox(new HitBox(new Point2D(5,7), BoundingShape.box(23, 23))) // general hitbox of player
                 .collidable()
                 .with(physics)

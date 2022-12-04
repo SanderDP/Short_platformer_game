@@ -2,6 +2,7 @@ package org.platformer.entities.components.player;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.SensorCollisionHandler;
+import org.platformer.entities.EntityType;
 import org.platformer.entities.components.PowerupboxComponent;
 
 public class PlayerTopSensorCollisionHandler extends SensorCollisionHandler {
@@ -14,6 +15,7 @@ public class PlayerTopSensorCollisionHandler extends SensorCollisionHandler {
 
     @Override
     protected void onCollisionBegin(Entity other) {
-        other.getComponent(PowerupboxComponent.class).hit(playerComponent.getEntity());
+        if (other.getType().equals(EntityType.POWERUPBOX))
+            other.getComponent(PowerupboxComponent.class).hit(playerComponent.getEntity());
     }
 }
