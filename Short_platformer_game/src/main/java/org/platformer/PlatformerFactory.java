@@ -47,7 +47,7 @@ public class PlatformerFactory implements EntityFactory {
 
         return entityBuilder(data)
                 .type(EntityType.PLAYER)
-                .bbox(new HitBox("HITBOX",new Point2D(5,7), BoundingShape.box(23, 23))) // general hitbox of player
+                .bbox(new HitBox("HITBOX",new Point2D(5,7), BoundingShape.box(22, 23))) // general hitbox of player
                 .collidable()
                 .with(physics)
                 .with(playerComponent)

@@ -17,8 +17,8 @@ public class PlayerBottomSensorCollisionHandler extends SensorCollisionHandler {
     @Override
     protected void onCollisionBegin(Entity other) {
         if (other.getType() == EnemyType.MUSHROOM) {
-            playerComponent.setInvincibleFor(1);
             playerComponent.jump();
+            playerComponent.setInvincibleFor(1);
             other.getComponent(MushroomComponent.class).hit();
         }
     }

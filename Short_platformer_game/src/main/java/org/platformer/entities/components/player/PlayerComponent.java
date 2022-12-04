@@ -58,7 +58,7 @@ public class PlayerComponent extends Component {
 
     @Override
     public void onUpdate(double tpf) {
-        if (texture.getAnimationChannel() != animSpawn && texture.getAnimationChannel() != animDied) {
+        if (texture.getAnimationChannel() != animSpawn && texture.getAnimationChannel() != animDied && texture.getAnimationChannel() != animHit) {
             if (physics.isOnGround()) {
                 if (physics.isMovingX()) {
                     if (texture.getAnimationChannel() != animWalk) {
@@ -119,9 +119,7 @@ public class PlayerComponent extends Component {
     }
 
     public void addPowerup(PowerupType powerupType) {
-        if (powerups.contains(PowerupType.NONE)) {
-            powerups.remove(PowerupType.NONE);
-        }
+        powerups.remove(PowerupType.NONE);
         if (!powerups.contains(powerupType)) {
             powerups.add(powerupType);
         }
@@ -139,10 +137,11 @@ public class PlayerComponent extends Component {
     public void hit() {
         texture.playAnimationChannel(animHit);
 
-        setInvincibleFor(3);
+        setInvincibleFor(1);
 
-       // physics.setVelocityY(500);
-       // physics.setVelocityX(-100);
+        texture.setOnCycleFinished(() -> {
+            texture.playAnimationChannel(animIdle);
+        });
     }
 
     public void spawn() {
