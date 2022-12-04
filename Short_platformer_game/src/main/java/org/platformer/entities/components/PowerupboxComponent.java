@@ -2,6 +2,7 @@ package org.platformer.entities.components;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.minigames.circuitbreaker.CircuitBreakerView;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.util.Duration;
@@ -33,7 +34,7 @@ public class PowerupboxComponent extends Component {
     public void hit(Entity player) {
         texture.playAnimationChannel(animHit);
         texture.setOnCycleFinished(() -> {
-            getMiniGameService().startMiniGame(new CustomControlCircuitBreakerView(), (result) -> {
+            getMiniGameService().startMiniGame(new CustomControlCircuitBreakerView(), (result) -> { //todo: figure out why this doesn't work on second time, but CircuitBreakerMiniGame does
                 PowerupType pt;
                 String message;
                 if (result.isSuccess()) {
