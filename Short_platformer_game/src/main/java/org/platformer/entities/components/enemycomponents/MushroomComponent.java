@@ -19,8 +19,8 @@ public class MushroomComponent extends EnemyComponent{
     private boolean noGroundFlag;
 
     public MushroomComponent() {
-        setAnimIdle(new AnimationChannel(image("Enemies/Mushroom/Idle (32x32).png"), 14, 32, 32, Duration.seconds(3), 0, 13));
-        setAnimRun(new AnimationChannel(image("Enemies/Mushroom/Run (32x32).png"), 16, 32, 32, Duration.seconds(3), 0, 15));
+        setAnimIdle(new AnimationChannel(image("Enemies/Mushroom/Idle (32x32).png"), 14, 32, 32, Duration.seconds(14/10), 0, 13));
+        setAnimRun(new AnimationChannel(image("Enemies/Mushroom/Run (32x32).png"), 16, 32, 32, Duration.seconds(16/10), 0, 15));
         setAnimHit(new AnimationChannel(image("Enemies/Mushroom/Hit.png"), 5, 32, 32, Duration.seconds(1), 0, 4));
 
         setTexture(new AnimatedTexture(getAnimIdle()));
