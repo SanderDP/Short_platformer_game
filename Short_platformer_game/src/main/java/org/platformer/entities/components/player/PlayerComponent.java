@@ -151,6 +151,9 @@ public class PlayerComponent extends Component {
         texture.setOnCycleFinished(() -> {
             texture.playAnimationChannel(animIdle);
         });
+
+        powerups.clear();
+        powerups.add(PowerupType.NONE);
     }
 
     public void spawn() {
