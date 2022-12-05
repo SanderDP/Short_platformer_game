@@ -18,12 +18,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.platformer.entities.*;
-import org.platformer.entities.components.CheckpointComponent;
-import org.platformer.entities.components.FruitComponent;
-import org.platformer.entities.components.GoalComponent;
+import org.platformer.entities.components.*;
 import org.platformer.entities.components.player.PlayerBottomSensorCollisionHandler;
 import org.platformer.entities.components.player.PlayerComponent;
-import org.platformer.entities.components.PowerupboxComponent;
 import org.platformer.entities.components.enemies.EnemyPlatformSensorCollisionHandler;
 import org.platformer.entities.components.enemies.MushroomComponent;
 import org.platformer.entities.components.player.PlayerTopSensorCollisionHandler;
@@ -64,6 +61,15 @@ public class PlatformerFactory implements EntityFactory {
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new PhysicsComponent())
                 .collidable()
+                .build();
+    }
+
+    @Spawns("startpoint")
+    public Entity newStartpoint(SpawnData data) {
+        return entityBuilder(data)
+                .type(EntityType.START)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new StartComponent())
                 .build();
     }
 
