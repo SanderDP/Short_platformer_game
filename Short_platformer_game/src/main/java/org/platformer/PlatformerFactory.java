@@ -103,6 +103,16 @@ public class PlatformerFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("extralife")
+    public Entity newExtralife(SpawnData data) {
+        return entityBuilder(data)
+                .type(EntityType.EXTRA_LIFE)
+                .bbox(new HitBox(new Point2D(0, 0), BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new ExtralifeComponent())
+                .collidable()
+                .build();
+    }
+
     @Spawns("powerupbox")
     public Entity newPowerupbox(SpawnData data) {
         return entityBuilder(data)

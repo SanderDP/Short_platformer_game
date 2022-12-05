@@ -102,10 +102,10 @@ public class PlatformerApp extends GameApplication {
         }, KeyCode.C);
     }
 
-    int initialAmountLives = 5;
+    int initialAmountLives = 3;
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        vars.put("Fruit Collected", 98); //todo: set to 0
+        vars.put("Fruit Collected", 0);
         vars.put("Lives", initialAmountLives);
         vars.put("Spawnpoint", new Point2D(87, 578));
     }
@@ -202,6 +202,39 @@ public class PlatformerApp extends GameApplication {
                     }
                 }
                 fruit.removeFromWorld(); // delete touched fruit
+            }
+        });
+
+        onCollision(EntityType.PLAYER, EntityType.EXTRA_LIFE, (player, life) -> {
+            life.removeFromWorld();
+            var lives = getWorldProperties().intProperty("Lives");
+
+            if (lives.intValue() < initialAmountLives) { // check if replacing already existing UINode or adding one
+                inc("Lives", +1); // increment amount of lives by one
+                var heartTexture = getAssetLoader().loadTexture("Items/Other/Heart (64x64).png");
+
+                heartTexture.setTranslateX(UINodes.get(lives.get() - 1).getTranslateX()); // set location of new UINode as the location of node it is replacing
+
+                getGameScene().clearUINodes(); // clear all UINodes
+
+                UINodes.set(lives.get() - 1,heartTexture); // replace old node with new one on same index in global ArrayList UINodes
+
+                for (Node n : UINodes) //add all nodes from global Arraylist UINodes to gamescene
+                    getGameScene().addUINode(n);
+
+            } else {
+                inc("Lives", +1);
+                int amountOfExtraLives = lives.get() - initialAmountLives;
+                var blueHeartTexture = getAssetLoader().loadTexture("Items/Other/Heart Blue (64x64).png");
+
+                blueHeartTexture.setTranslateX(UINodes.get(initialAmountLives - 1).getTranslateX() + (66 * amountOfExtraLives)); // set location of new UINode
+
+                UINodes.add(blueHeartTexture); // add extra heart to global Arraylist UINodes
+
+                getGameScene().clearUINodes(); // clear all UINodes
+
+                for (Node n : UINodes) // add all nodes from global Arraylist UINodes to gamescene
+                    getGameScene().addUINode(n);
             }
         });
 

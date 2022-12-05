@@ -48,7 +48,7 @@
 </data>
  </layer>
  <objectgroup id="4" name="Object Layer 1">
-  <object id="77" type="powerupbox" x="336" y="512" width="16" height="16"/>
+  <object id="77" type="extralife" x="336" y="512" width="16" height="16"/>
   <object id="78" type="fruit" x="480" y="560" width="16" height="16"/>
   <object id="93" type="platform" x="48" y="592" width="928" height="48"/>
   <object id="105" type="goal" x="7856" y="480" width="64" height="64"/>
