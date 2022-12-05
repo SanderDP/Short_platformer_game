@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import org.platformer.entities.EnemyType;
 import org.platformer.entities.EntityType;
 import org.platformer.entities.components.CheckpointComponent;
@@ -219,8 +220,10 @@ public class PlatformerApp extends GameApplication {
         getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EnemyType.MUSHROOM) {
             @Override
             protected void onCollisionBegin(Entity player, Entity mushroom) {
-                if (!player.getComponent(PlayerComponent.class).isInvincible())
-                    onPlayerHit();
+                getGameTimer().runOnceAfter(() -> { //has to play on delay to make sure check doesn't happen before player is set to invincible from jumping on mushroom
+                    if (!player.getComponent(PlayerComponent.class).isInvincible())
+                        onPlayerHit();
+                }, Duration.seconds(.1));
             }
         });
 
