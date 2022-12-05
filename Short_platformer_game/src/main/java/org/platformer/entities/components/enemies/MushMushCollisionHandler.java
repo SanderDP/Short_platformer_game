@@ -20,13 +20,16 @@ public class MushMushCollisionHandler extends CollisionHandler {
 
         mush2.getComponent(MushroomComponent.class).setPlatformInWayFlag(true);
         mush2.getComponent(CollidableComponent.class).setValue(false);
+    }
 
+    @Override
+    protected void onCollisionEnd(Entity mush1, Entity mush2) {
         FXGL.getGameTimer().runOnceAfter(() -> {
             mush1.getComponent(CollidableComponent.class).setValue(true);
-        }, Duration.seconds(.5));
+        }, Duration.seconds(.1));
 
         FXGL.getGameTimer().runOnceAfter(() -> {
             mush2.getComponent(CollidableComponent.class).setValue(true);
-        }, Duration.seconds(.5));
+        }, Duration.seconds(.1));
     }
 }
