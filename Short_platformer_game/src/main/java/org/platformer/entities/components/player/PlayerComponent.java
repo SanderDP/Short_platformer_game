@@ -104,6 +104,12 @@ public class PlayerComponent extends Component {
             texture.loopAnimationChannel(animJump);
     }
 
+    public void jumpNoCheck() {
+        physics.setVelocityY(-250);
+
+        texture.loopAnimationChannel(animJump);
+    }
+
     public void stomp() {
         if (!powerups.contains(PowerupType.STOMP))
             return;
