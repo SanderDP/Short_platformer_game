@@ -141,6 +141,9 @@ public class PlayerComponent extends Component {
     }
 
     public void hit() {
+        if (isInvincible()) {
+            return;
+        }
         texture.playAnimationChannel(animHit);
 
         setInvincibleFor(1);

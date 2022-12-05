@@ -31,7 +31,7 @@ public abstract class EnemyComponent extends Component {
         getTexture().playAnimationChannel(getAnimHit());
 
         //todo: make entity untouchable / set collision off
-        //entity.getComponent(CollidableComponent.class).setValue(false); doesn't seem to work
+        entity.getComponent(CollidableComponent.class).setValue(false);
         //entity.getBoundingBoxComponent().clearHitBoxes(); also doesn't do it either
 
         getTexture().setOnCycleFinished(() -> {
