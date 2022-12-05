@@ -19,7 +19,7 @@ public class CustomControlCircuitBreakerView extends MiniGameView<CircuitBreaker
 
     private static int WIDTH = 700;
     private static int HEIGHT = 500;
-    private static CircuitBreakerMiniGame miniGame = new CircuitBreakerMiniGame(10, 10, 15.0, 135.0, Duration.seconds(2.0));
+    private static CircuitBreakerMiniGame miniGame;
 
     private Canvas canvas;
     private GraphicsContext g;
@@ -29,11 +29,12 @@ public class CustomControlCircuitBreakerView extends MiniGameView<CircuitBreaker
     private HashMap<Point2D, Point2D> lineData = new HashMap<>();
 
     public CustomControlCircuitBreakerView() {
-        super(miniGame);
+        super(miniGame = new CircuitBreakerMiniGame(10, 10, 15.0, 135.0, Duration.seconds(2.0)));
         this.canvas = new Canvas(WIDTH, HEIGHT);
         this.g = canvas.getGraphicsContext2D();
         this.oldPosition = miniGame.getStartPoint();
         getChildren().add(canvas);
+        System.out.println("something");
     }
 
     @Override
