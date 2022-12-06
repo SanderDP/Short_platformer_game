@@ -47,6 +47,8 @@ public class PlatformerApp extends GameApplication {
 
     private Entity player;
 
+    private int finalLevel = 1;
+
     private ArrayList<Node> UINodes = new ArrayList<>();
 
     @Override
@@ -100,6 +102,7 @@ public class PlatformerApp extends GameApplication {
     int initialAmountLives = 3;
     @Override
     protected void initGameVars(Map<String, Object> vars) {
+        vars.put("Level", 0);
         vars.put("Fruit Collected", 0);
         vars.put("Lives", initialAmountLives);
         vars.put("Spawnpoint", new Point2D(87, 578));
@@ -142,10 +145,7 @@ public class PlatformerApp extends GameApplication {
 
         loopBGM("POL-lone-wolf-short.wav");
 
-        setLevelFromMap("tmx/platformer.tmx");
-
-        Point2D spawnpoint = getWorldProperties().getValue("Spawnpoint");
-        player = spawn("player", spawnpoint.getX(), spawnpoint.getY());
+        initLevel();
 
         getGameScene().setBackgroundRepeat("Background/Blue.png");
 
@@ -153,6 +153,19 @@ public class PlatformerApp extends GameApplication {
         viewport.setBounds(0, 0, 500 * 16, 40 * 16);
         viewport.setZoom(2);
         viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+    }
+
+    private void initLevel() {
+        if (geti("Level") == finalLevel) {
+            getDialogService().showMessageBox("You win!", getGameController()::exit); //show complete level and exit the game
+        } else {
+            inc("Level", 1);
+            player = null;
+            //getWorldProperties().setValue("Spawnpoint", new Point2D(startpoint.getX(),startpoint.getY())); //for setting startpoint of player
+            setLevelFromMap("level" + geti("Level") + ".tmx");
+            Point2D spawnpoint = getWorldProperties().getValue("Spawnpoint");
+            player = spawn("player", spawnpoint.getX(), spawnpoint.getY());
+        }
     }
 
     @Override
@@ -243,7 +256,7 @@ public class PlatformerApp extends GameApplication {
         //set collision rule player and goal
         onCollisionOneTimeOnly(EntityType.PLAYER, EntityType.GOAL, (player, goal) -> {
             play("items/goal/goalget.wav");
-            getDialogService().showMessageBox("You win!", getGameController()::exit); //show complete level and exit the game
+            initLevel();
         });
 
         //set collision rule player and checkpoint
