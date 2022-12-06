@@ -38,6 +38,7 @@ public class PlatformerApp extends GameApplication {
         settings.setTitle("Short platformer game");
         settings.setVersion("0.1");
         settings.setMainMenuEnabled(true);
+        settings.setPauseMusicWhenMinimized(true);
 
         //set mode to developer and make developer tools accessible when playing by pressing "1"
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
