@@ -7,4 +7,9 @@ assets from:
  
  Heart: https://opengameart.org/content/heart-pixel-art by Dansevenstar
  
- Other: https://pixelfrog-assets.itch.io/pixel-adventure-1
+ Other textures: https://pixelfrog-assets.itch.io/pixel-adventure-1
+ 
+ Sounds: https://dagurasusketch.itch.io/retrosounds
+ 
+ Music: “Lone Wolf”, from PlayOnLoop.com
+         Licensed under Creative Commons by Attribution 4.0
