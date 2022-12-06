@@ -93,13 +93,6 @@ public class PlatformerApp extends GameApplication {
                 player.getComponent(PlayerComponent.class).shoot();
             }
         }, KeyCode.Z);
-
-        getInput().addAction(new UserAction("getCoordinates") {
-            @Override
-            protected void onActionBegin() {
-                System.out.println(player.getCenter());;
-            }
-        }, KeyCode.C);
     }
 
     int initialAmountLives = 3;

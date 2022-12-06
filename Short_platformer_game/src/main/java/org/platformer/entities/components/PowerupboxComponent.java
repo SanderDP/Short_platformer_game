@@ -32,6 +32,7 @@ public class PowerupboxComponent extends Component {
 
     public void hit(Entity player) {
         texture.playAnimationChannel(animHit);
+        play("items/powerupbox/powerupboxhit.wav");
         texture.setOnCycleFinished(() -> {
             getMiniGameService().startMiniGame(new CustomControlCircuitBreakerView(), (result) -> {
                 PowerupType pt;

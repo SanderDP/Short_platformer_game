@@ -7,6 +7,7 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.image;
+import static com.almasb.fxgl.dsl.FXGL.play;
 
 public class CheckpointComponent extends Component {
 
@@ -47,5 +48,6 @@ public class CheckpointComponent extends Component {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+        play("items/checkpoint/checkpointget.wav");
     }
 }

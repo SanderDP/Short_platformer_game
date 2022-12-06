@@ -34,7 +34,6 @@ public class CustomControlCircuitBreakerView extends MiniGameView<CircuitBreaker
         this.g = canvas.getGraphicsContext2D();
         this.oldPosition = miniGame.getStartPoint();
         getChildren().add(canvas);
-        System.out.println("something");
     }
 
     @Override

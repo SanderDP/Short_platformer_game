@@ -1,5 +1,10 @@
 package org.platformer.entities.components.player;
 
+import com.almasb.fxgl.audio.Audio;
+import com.almasb.fxgl.audio.AudioPlayer;
+import com.almasb.fxgl.audio.AudioType;
+import com.almasb.fxgl.audio.Sound;
+import com.almasb.fxgl.core.asset.AssetLoaderService;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
@@ -76,7 +81,6 @@ public class PlayerComponent extends Component {
     }
 
     public void left() {
-        //setscaleX(-1) mirrors character sprite compared to given png
         getEntity().setScaleX(-1);
         physics.setVelocityX(-170);
     }
@@ -95,6 +99,7 @@ public class PlayerComponent extends Component {
             return;
 
         physics.setVelocityY(-250);
+        play("player/jump.wav"); //delayed audio either caused by check or by audiodriver of pc not compatible/up-to-date
 
         jumps--;
 
@@ -120,7 +125,7 @@ public class PlayerComponent extends Component {
     public void shoot() {
         if (!powerups.contains(PowerupType.SHOOT))
             return;
-
+        play("player/shoot.wav");
         FXGL.spawn("bullet", entity.getCenter());
     }
 
@@ -134,6 +139,7 @@ public class PlayerComponent extends Component {
     public void died() {
         getInput().clearAll();
         texture.playAnimationChannel(animDied);
+        play("player/died.wav");
 
         texture.setOnCycleFinished(() -> {
             getDialogService().showMessageBox("Game Over", getGameController()::exit);
@@ -145,6 +151,7 @@ public class PlayerComponent extends Component {
             return;
         }
         texture.playAnimationChannel(animHit);
+        play("player/hit.wav");
 
         setInvincibleFor(1);
 
@@ -158,6 +165,7 @@ public class PlayerComponent extends Component {
 
     public void spawn() {
         texture.playAnimationChannel(animSpawn);
+        play("player/died.wav");
 
         texture.setOnCycleFinished(() -> {
             texture.loopAnimationChannel(animIdle);
