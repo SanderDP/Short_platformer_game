@@ -39,10 +39,10 @@ public class PowerupboxComponent extends Component {
                 String message;
                 if (result.isSuccess()) {
                     pt = PowerupType.SHOOT;
-                    message = "Press \"z\" to shoot!";
+                    message = "Press " + getInput().getTriggerName("Shoot") + " to shoot!";
                 } else {
                     pt = PowerupType.STOMP;
-                    message = "Press down to slam down with force!";
+                    message = "Press " + getInput().getTriggerName("Stomp") + " to slam down with force!";
                 }
                 player.getComponent(PlayerComponent.class).addPowerup(pt);
                 getNotificationService().pushNotification(message);

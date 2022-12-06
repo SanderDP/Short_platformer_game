@@ -37,6 +37,7 @@ public class PlatformerApp extends GameApplication {
         settings.setHeight(40 * 16);
         settings.setTitle("Short platformer game");
         settings.setVersion("0.1");
+        settings.setMainMenuEnabled(true);
 
         //set mode to developer and make developer tools accessible when playing by pressing "1"
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
@@ -137,6 +138,9 @@ public class PlatformerApp extends GameApplication {
     @Override
     protected void initGame() {
         getGameWorld().addEntityFactory(new PlatformerFactory());
+
+        loopBGM("POL-lone-wolf-short.wav");
+
         setLevelFromMap("tmx/platformer.tmx");
 
         Point2D spawnpoint = getWorldProperties().getValue("Spawnpoint");

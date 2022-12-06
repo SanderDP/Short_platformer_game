@@ -99,7 +99,7 @@ public class PlayerComponent extends Component {
             return;
 
         physics.setVelocityY(-250);
-        play("player/jump.wav"); //delayed audio either caused by check or by audiodriver of pc not compatible/up-to-date
+        play("player/jump.wav");
 
         jumps--;
 
@@ -110,6 +110,7 @@ public class PlayerComponent extends Component {
     }
 
     public void jumpNoCheck() {
+        play("player/jump.wav");
         physics.setVelocityY(-250);
 
         texture.loopAnimationChannel(animJump);
