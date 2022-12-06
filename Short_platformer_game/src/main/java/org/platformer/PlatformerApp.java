@@ -164,9 +164,11 @@ public class PlatformerApp extends GameApplication {
 
                 var fruitCollected = getWorldProperties().intProperty("Fruit Collected");
                 inc("Fruit Collected", +1);
+                play("items/fruit/fruitget.wav");
 
                 if (fruitCollected.intValue() >= 100) { //if amount of fruits collected is 100 set it to 0 and add a life
                     fruitCollected.set(0);
+                    play("extralife.wav");
 
                     var lives = getWorldProperties().intProperty("Lives");
 
@@ -204,6 +206,8 @@ public class PlatformerApp extends GameApplication {
 
         onCollision(EntityType.PLAYER, EntityType.EXTRA_LIFE, (player, life) -> {
             life.removeFromWorld();
+            play("extralife.wav");
+
             var lives = getWorldProperties().intProperty("Lives");
 
             if (lives.intValue() < initialAmountLives) { // check if replacing already existing UINode or adding one
@@ -237,6 +241,7 @@ public class PlatformerApp extends GameApplication {
 
         //set collision rule player and goal
         onCollisionOneTimeOnly(EntityType.PLAYER, EntityType.GOAL, (player, goal) -> {
+            play("items/goal/goalget.wav");
             getDialogService().showMessageBox("You win!", getGameController()::exit); //show complete level and exit the game
         });
 

@@ -110,7 +110,6 @@ public class PlayerComponent extends Component {
     }
 
     public void jumpNoCheck() {
-        play("player/jump.wav");
         physics.setVelocityY(-250);
 
         texture.loopAnimationChannel(animJump);

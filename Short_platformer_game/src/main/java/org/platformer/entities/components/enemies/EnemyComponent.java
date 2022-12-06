@@ -1,5 +1,6 @@
 package org.platformer.entities.components.enemies;
 
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.PhysicsComponent;
@@ -28,6 +29,7 @@ public abstract class EnemyComponent extends Component {
         if (getTexture().getAnimationChannel() == getAnimHit())
             return;
 
+        FXGL.play("enemy/enemyhit.wav");
         getTexture().playAnimationChannel(getAnimHit());
 
         //todo: make entity untouchable / set collision off
