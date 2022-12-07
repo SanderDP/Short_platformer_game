@@ -36,13 +36,13 @@ public class PlatformerApp extends GameApplication {
         settings.setWidth(64 * 16);
         settings.setHeight(40 * 16);
         settings.setTitle("Short platformer game");
-        settings.setVersion("0.1");
+        settings.setVersion("1.0");
         settings.setMainMenuEnabled(true);
         settings.setPauseMusicWhenMinimized(true);
 
         //set mode to developer and make developer tools accessible when playing by pressing "1"
-        settings.setApplicationMode(ApplicationMode.DEVELOPER);
-        settings.setDeveloperMenuEnabled(true);
+        settings.setApplicationMode(ApplicationMode.RELEASE);
+        //settings.setDeveloperMenuEnabled(true);
     }
 
     private Entity player;
